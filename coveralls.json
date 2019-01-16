@@ -1,0 +1,7 @@
+{
+    "skip_files": [
+      "lib/errors/business_error.ex",
+      "lib/mix/*",
+      "test/support/*"
+    ]
+  }
