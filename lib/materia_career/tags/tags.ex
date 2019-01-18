@@ -6,6 +6,8 @@ defmodule MateriaCareer.Tags do
   import Ecto.Query, warn: false
 
   alias MateriaCareer.Tags.Tag
+  @repo Application.get_env(:materia, :repo)
+
 
   @doc """
   Returns the list of tags.
@@ -16,10 +18,7 @@ defmodule MateriaCareer.Tags do
       [%Tag{}, ...]
 
   """
-  def list_tags do
-    repo = Application.get_env(:servicex, :repo)
-    repo.all(Tag)
-  end
+  def list_tags, do: @repo.all(Tag)
 
   @doc """
   Gets a single tag.
@@ -35,10 +34,7 @@ defmodule MateriaCareer.Tags do
       ** (Ecto.NoResultsError)
 
   """
-  def get_tag!(id) do
-    repo = Application.get_env(:servicex, :repo)
-    repo.get!(Tag, id)
-  end
+  def get_tag!(id), do: @repo.get!(Tag, id)
 
   @doc """
   Creates a tag.
@@ -53,10 +49,9 @@ defmodule MateriaCareer.Tags do
 
   """
   def create_tag(attrs \\ %{}) do
-    repo = Application.get_env(:servicex, :repo)
     %Tag{}
     |> Tag.changeset(attrs)
-    |> repo.insert()
+    |> @repo.insert()
   end
 
   @doc """
@@ -72,10 +67,9 @@ defmodule MateriaCareer.Tags do
 
   """
   def update_tag(%Tag{} = tag, attrs) do
-    repo = Application.get_env(:servicex, :repo)
     tag
     |> Tag.changeset(attrs)
-    |> repo.update()
+    |> @repo.update()
   end
 
   @doc """
@@ -91,8 +85,7 @@ defmodule MateriaCareer.Tags do
 
   """
   def delete_tag(%Tag{} = tag) do
-    repo = Application.get_env(:servicex, :repo)
-    repo.delete(tag)
+    @repo.delete(tag)
   end
 
   @doc """
@@ -109,8 +102,7 @@ defmodule MateriaCareer.Tags do
   end
 
   def get_tag_by_label(label) do
-    repo = Application.get_env(:servicex, :repo)
-    repo.get_by(Tag, label: label)
+    @repo.get_by(Tag, label: label)
   end
 
   def merge_tag(label) do

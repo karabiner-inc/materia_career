@@ -18,6 +18,7 @@ defmodule MateriaCareer.Projects.Project do
     field :pay, :integer
     field :work_style, :string
     field :location, :string
+    # field :organization_id, :integer
     field :lock_version, :integer, default: 0
 
     belongs_to :organization, Materia.Organizations.Organization

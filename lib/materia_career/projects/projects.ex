@@ -6,6 +6,7 @@ defmodule MateriaCareer.Projects do
   import Ecto.Query, warn: false
   alias Materia.Accounts
   alias MateriaCareer.Projects.Project
+  alias MateriaCareer.Tags
 
   alias Materia.Organizations.Organization
   alias MateriaUtils.Calendar.CalendarUtil
@@ -73,42 +74,27 @@ defmodule MateriaCareer.Projects do
   end
 
   def create_my_project(_result, user_id, attrs \\ %{}) do
-    converted_attrs =
-      attrs
-      |> CalendarUtil.perse_datetime_strftime([
-        "project_start_date",
-        "project_end_date",
-        "work_start_date",
-        "work_end_date"
-      ])
-      |> CalendarUtil.convert_time_local2utc([
-        "project_start_date",
-        "project_end_date",
-        "work_start_date",
-        "work_end_date"
-      ])
-
     user =
       user_id
       |> Accounts.get_user!()
       |> @repo.preload(:organization)
 
     project =
-      user.organization
-      |> Ecto.build_assoc(:projects, attrs)
-
-    {:ok, project} =
-      project
-      |> Project.changeset(attrs)
-      |> @repo.insert()
-
-    project =
-      project
+      attrs
+      |> CalendarUtil.parse_datetime_strftime(["project_start_date","project_end_date","work_start_date","work_end_date"])
+      |> CalendarUtil.convert_time_local2utc(["project_start_date","project_end_date","work_start_date","work_end_date"]) 
+      |> Map.put("organization_id", user.organization.id)
+      |> create_project()
+      |> get_ok()
       |> merge_tags(attrs["project_tags"])
       |> @repo.preload(:organization)
       |> @repo.preload(:project_tags)
 
     {:ok, project}
+  end
+
+  defp get_ok({:ok, value}) do
+    value
   end
 
   def update_project(_result, user_id, attrs) do
