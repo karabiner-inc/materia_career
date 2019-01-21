@@ -38,12 +38,19 @@ defmodule MateriaCareerWeb.Router do
     post "tmp-registration", UserController, :registration_tmp_user
     post "request-password-reset", UserController, :request_password_reset
 
-    # resources "/items", ItemController, except: [:new, :edit]
-    # resources "/taxes", TaxController, except: [:new, :edit]
-
   end
 
   scope "/api", MateriaCareerWeb do
+    pipe_through [ :api, :tmp_user_auth]
+    post "/my-projects", ProjectController, :list_my_plojects
+    post "/create-my-project", ProjectController, :create_my_project
+    post "/update-my-project", ProjectController, :update_my_project
+  end
+
+  scope "/api", MateriaCareerWeb do
+    pipe_through [ :api]
+    resources "/projects", ProjectController, except: [:new, :edit]
+    resources "/tags", TagController, except: [:new, :edit]
   end
 
   scope "/api", MateriaWeb do
