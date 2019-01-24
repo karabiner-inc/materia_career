@@ -51,6 +51,7 @@ defmodule MateriaCareerWeb.Router do
     pipe_through [ :api]
     resources "/projects", ProjectController, except: [:new, :edit]
     resources "/tags", TagController, except: [:new, :edit]
+    resources "/offers", OfferController, except: [:new, :edit]
   end
 
   scope "/api", MateriaWeb do

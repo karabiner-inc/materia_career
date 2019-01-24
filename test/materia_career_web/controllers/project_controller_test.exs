@@ -68,7 +68,7 @@ defmodule MateriaCareerWeb.ProjectControllerTest do
   describe "index" do
     test "lists all projects", %{conn: conn} do
       conn = get(conn, project_path(conn, :index))
-      assert json_response(conn, 200) == []
+      assert  [_] = json_response(conn, 200)
     end
   end
 
