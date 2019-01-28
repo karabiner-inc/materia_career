@@ -39,3 +39,7 @@ Mails.create_mail_template(%{ mail_template_type: "user_registration_request", s
 Mails.create_mail_template(%{ mail_template_type: "user_registration_completed", subject: "【本登録完了しました】{!name}様 本登録完了のご案内", body: "{!name}様\nこの度は当サービスのご利用誠にありがとうございます。\n\n本登録が完了いたしました。\n\nIDの問い合わせ機能はない為、本メールを大切に保管してください。\n\n  ユーザーID: {!email}\n  パスワード: 登録時に入力いただいたパスワード\n 本サービスを末長くよろしくお願いいたします。\n\n サインイン: https://{!sign_in_url} \n\n------------------------------\nカラビナテクノロジー株式会社\n〒810-0001 \n福岡市中央区天神1-2-4 農業共済ビル2F\n------------------------------" })
 Mails.create_mail_template(%{ mail_template_type: "password_reset_request", subject: "【パスワード再登録申請】{!email}様 パスワード再登録のご案内", body: "{!email}様\n当サービスよりパスワード再登録の申請を受け付けました。\n\n下記URLのリンクをクリックし、30分以内にパスワード再登録をお願いいたします。\n\n 本サービスを末長くよろしくお願いいたします。\n\n https://{!password_reset_url}?param=!{password_reset_token} \n\n------------------------------\nカラビナテクノロジー株式会社\n〒810-0001 \n福岡市中央区天神1-2-4 農業共済ビル2F\n------------------------------" })
 Mails.create_mail_template(%{ mail_template_type: "password_reset_completed", subject: "【パスワード再登録完了】{!name}様 パスワード再登録完了のご案内", body: "{!name}様\n当サービスよりパスワードが再登録されました。\n\nユーザーID: {!email}\n  パスワード: 再登録時に入力いただいたパスワード\n\n 本サービスを末長くよろしくお願いいたします。\n\n サインイン: https://{!sign_in_url} \n\n------------------------------\nカラビナテクノロジー株式会社\n〒810-0001 \n福岡市中央区天神1-2-4 農業共済ビル2F\n------------------------------" })
+
+alias MateriaCareer.Projects
+
+Projects.create_project(%{title: "project1", organization_id: 1})
