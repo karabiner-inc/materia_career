@@ -59,7 +59,7 @@ defmodule MateriaCareer.Mixfile do
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
       {:materia_utils, git: "https://github.com/karabiner-inc/materia_utils.git", override: true},
-      {:materia, "~> 0.1.0"},
+      {:materia, "~> 0.1.2"},
       {:ex_doc, ">= 0.0.0", only: :test},
       {:excoveralls, "~> 0.10", only: :test},
     ]
