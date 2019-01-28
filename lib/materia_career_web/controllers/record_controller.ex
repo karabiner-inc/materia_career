@@ -6,7 +6,7 @@ defmodule MateriaCareerWeb.RecordController do
 
   alias Ecto.Multi
 
-  action_fallback MateriaCareerWeb.FallbackController
+  action_fallback MateriaWeb.FallbackController
 
   def index(conn, _params) do
     records = Projects.list_records()
