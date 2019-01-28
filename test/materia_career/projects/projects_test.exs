@@ -51,7 +51,7 @@ defmodule MateriaCareer.ProjectControllerTest do
     test "list_projects/0" do
       project = project_fixture()
       project = Projects.get_project!(project.id)
-      assert Projects.list_projects() |> Enum.at(0) == project
+      assert Projects.list_projects() |> Enum.filter(fn(x) -> x.id == project.id end) |> Enum.at(0) == project
     end
 
     test "list_project_by_user_id/2" do
