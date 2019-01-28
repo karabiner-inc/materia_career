@@ -14,7 +14,11 @@ defmodule MateriaCareerWeb.Router do
   end
 
   pipeline :guardian_auth do
-    plug Materia.AuthenticatePipeline
+    plug Materia.UserAuthPipeline
+  end
+
+  pipeline :guardian_auth_acount do
+    plug Materia.AccountAuthPipeline
   end
 
   pipeline :tmp_user_auth do
