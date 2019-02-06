@@ -8,6 +8,7 @@ defmodule MateriaCareer.Messages do
   alias MateriaCareer.Messages.Offer
   alias MateriaUtils.Calendar.CalendarUtil
   alias Materia.Errors.BusinessError
+  alias MateriaCareer.Projects
 
   @repo Application.get_env(:materia, :repo)
 
@@ -67,8 +68,9 @@ defmodule MateriaCareer.Messages do
   end
 
   def list_my_project_offer_by_status(user_id, project_id_list, status) when is_list(project_id_list) do
-    user = Materia.Accounts.get_user!(user_id)
-    projects = list_your_projects(user)
+
+    projects = Projects.list_project_by_user_id(user_id, [2])
+
     my_project_id_list = project_id_list
     |> Enum.filter(fn(project_id) ->
       projects
@@ -100,18 +102,6 @@ defmodule MateriaCareer.Messages do
 
     {:ok, offer}
   end
-
-  #def get_offer_to_my_organization!(_result, user_profile, offer_id, status) do
-#
-  #  projects = list_your_projects(user_profile)
-#
-  #  _result =
-  #    if Enum.any?(projects, fn(project) -> project.id == project_id end) do
-  #      {:ok, offer} = get_my_project_offer!(%{}, offer_id, project_id, status)
-  #    else
-  #      raise RuntimeError, message: "project not found. project_id:#{project_id}"
-  #    end
-  #end
 
   def get_my_offer!(_result, offer_id, from_user_id, status) do
     offers = Offer
@@ -230,11 +220,10 @@ defmodule MateriaCareer.Messages do
 
   def create_my_organization_offer(_resutl, user_id, attr \\ %{}) do
     user = Materia.Accounts.get_user!(user_id)
-    projects = list_your_projects(user)
-
+    projects = Projects.list_project_by_user_id(user_id, [2])
     # TODO 入力されたProjectIDの妥当性チェック
     _result =
-    if Enum.any?(projects, fn(project) -> project.id == attr["project_id"] end) do
+    if Enum.any?(projects, fn(project) -> project.id == String.to_integer(attr["project_id"]) end) do
       offer_attr = attr
       |> Map.put("from_user_id", user.id)
       |> Map.put("offer_time", CalendarUtil.now())
@@ -252,7 +241,6 @@ defmodule MateriaCareer.Messages do
 
     #{:ok, offer} = get_offer_to_my_organization!(%{}, user_profile, attr["offer_id"], attr["project_id"], Offer.status.new)
     offer = get_offer_with_lock!(attr["offer_id"])
-
     _result =
     if my_organization_offer?(user, offer) do
       {:ok, offer} = update_offer(offer, attr)
@@ -262,20 +250,8 @@ defmodule MateriaCareer.Messages do
   end
 
   def my_organization_offer?(user, offer) do
-    if ! Ecto.assoc_loaded?(user.organization) do
-      user = @repo.preload(user, :organization)
-    end
-
-    organization = user.organization
-
-    if ! Ecto.assoc_loaded?(organization.projects) do
-      organization = @repo.preload(organization, :projects)
-    end
-
-    project_id = offer.project_id
-    projects = organization.projects
-
-    Enum.any?(projects, fn(project) -> project.id == project_id end)
+    Projects.list_project_by_user_id(user.id, [2])
+    |> Enum.any?(fn(project) -> project.id == offer.project_id end)
   end
 
   def update_my_offer(_resutl, user_id, attr \\ %{}) do
@@ -327,12 +303,6 @@ defmodule MateriaCareer.Messages do
       _ -> raise BusinessError, message: "offer_id:#{offer_id} is not offer to you."
     end
 
-  end
-
-  def list_your_projects(user) do
-    organization = user.organization
-    |> @repo.preload(:projects)
-    organization.projects
   end
 
 end

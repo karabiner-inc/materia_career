@@ -42,4 +42,32 @@ Mails.create_mail_template(%{ mail_template_type: "password_reset_completed", su
 
 alias MateriaCareer.Projects
 
-Projects.create_project(%{title: "project1", organization_id: 1})
+{:ok, project1} = Projects.create_project(%{title: "project1", organization_id: 1})
+{:ok, project2} = Projects.create_project(%{title: "project2", organization_id: 1})
+
+alias MateriaCareer.Messages
+
+{:ok, _ } = Messages.create_offer(
+  %{
+    message_subject: "project1",
+    offer_message: "offer project1",
+    project_id: project1.id,
+    from_user_id: 1,
+    to_user_id: 2,
+    status: 1,
+    offer_time: MateriaUtils.Calendar.CalendarUtil.now()
+
+  }
+)
+
+{:ok, _ } = Messages.create_offer(
+  %{
+    message_subject: "project2",
+    offer_message: "offer project2",
+    project_id: project2.id,
+    from_user_id: 2,
+    to_user_id: 1,
+    status: 1,
+    offer_time: MateriaUtils.Calendar.CalendarUtil.now()
+  }
+)

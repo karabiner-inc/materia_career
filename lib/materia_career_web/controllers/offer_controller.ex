@@ -41,50 +41,50 @@ defmodule MateriaCareerWeb.OfferController do
   end
 
   def list_my_offers(conn, %{"status" => status}) do
-    user_id = String.to_integer(conn.private.guardian_default_claims["sub"])
+    user_id = MateriaWeb.ControllerBase.get_user_id(conn)
     offers = Messages.list_my_offer_by_status(user_id, status)
     render(conn, "index.json", offers: offers)
   end
 
   def list_my_projects_offers(conn, %{"status" => status, "project_id_list" => project_id_list}) do
-    user_id = String.to_integer(conn.private.guardian_default_claims["sub"])
+    user_id = MateriaWeb.ControllerBase.get_user_id(conn)
     offers = Messages.list_my_project_offer_by_status(user_id, project_id_list, status)
     render(conn, "index.json", offers: offers)
   end
 
   def create_my_offer(conn, offer_params) do
-    user_id = String.to_integer(conn.private.guardian_default_claims["sub"])
+    user_id = MateriaWeb.ControllerBase.get_user_id(conn)
 
-    Servicex.ControllerBase.transaction_flow(conn, :offer, MateriaCareer.Messages, :create_my_offer, [user_id, offer_params])
+    MateriaWeb.ControllerBase.transaction_flow(conn, :offer, MateriaCareer.Messages, :create_my_offer, [user_id, offer_params])
   end
 
   def create_my_organization_offer(conn, offer_params) do
-    user_id = String.to_integer(conn.private.guardian_default_claims["sub"])
+    user_id = MateriaWeb.ControllerBase.get_user_id(conn)
 
-    Servicex.ControllerBase.transaction_flow(conn, :offer, MateriaCareer.Messages, :create_my_organization_offer, [user_id, offer_params])
+    MateriaWeb.ControllerBase.transaction_flow(conn, :offer, MateriaCareer.Messages, :create_my_organization_offer, [user_id, offer_params])
   end
 
   def update_my_organization_offer(conn, offer_params) do
-    user_id = String.to_integer(conn.private.guardian_default_claims["sub"])
+    user_id = MateriaWeb.ControllerBase.get_user_id(conn)
 
-    Servicex.ControllerBase.transaction_flow(conn, :offer, MateriaCareer.Messages, :update_my_organization_offer, [user_id, offer_params])
+    MateriaWeb.ControllerBase.transaction_flow(conn, :offer, MateriaCareer.Messages, :update_my_organization_offer, [user_id, offer_params])
   end
 
   def update_my_offer(conn, offer_params) do
-    user_id = String.to_integer(conn.private.guardian_default_claims["sub"])
+    user_id = MateriaWeb.ControllerBase.get_user_id(conn)
 
-    Servicex.ControllerBase.transaction_flow(conn, :offer, MateriaCareer.Messages, :update_my_offer, [user_id, offer_params])
+    MateriaWeb.ControllerBase.transaction_flow(conn, :offer, MateriaCareer.Messages, :update_my_offer, [user_id, offer_params])
   end
 
   def answer_offer_to_my_organization(conn, %{"offer_id" => offer_id, "status" => status, "answer_message" => answer_message, "lock_version" => lock_version}) do
-    user_id = String.to_integer(conn.private.guardian_default_claims["sub"])
+    user_id = MateriaWeb.ControllerBase.get_user_id(conn)
 
-    Servicex.ControllerBase.transaction_flow(conn, :offer, MateriaCareer.Messages, :answer_offer_to_my_organization, [user_id, offer_id, status, answer_message, lock_version])
+    MateriaWeb.ControllerBase.transaction_flow(conn, :offer, MateriaCareer.Messages, :answer_offer_to_my_organization, [user_id, offer_id, status, answer_message, lock_version])
   end
 
   def answer_offer_to_me(conn, %{"offer_id" => offer_id, "status" => status, "answer_message" => answer_message, "lock_version" => lock_version}) do
-    user_id = String.to_integer(conn.private.guardian_default_claims["sub"])
+    user_id = MateriaWeb.ControllerBase.get_user_id(conn)
 
-    Servicex.ControllerBase.transaction_flow(conn, :offer, MateriaCareer.Messages, :answer_offer_to_me, [user_id, offer_id, status, answer_message, lock_version])
+    MateriaWeb.ControllerBase.transaction_flow(conn, :offer, MateriaCareer.Messages, :answer_offer_to_me, [user_id, offer_id, status, answer_message, lock_version])
   end
 end
