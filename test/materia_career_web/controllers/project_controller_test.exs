@@ -68,7 +68,7 @@ defmodule MateriaCareerWeb.ProjectControllerTest do
   describe "index" do
     test "lists all projects", %{conn: conn} do
       conn = get(conn, project_path(conn, :index))
-      assert  [_] = json_response(conn, 200)
+      assert json_response(conn, 200) |> Enum.count > 0
     end
   end
 

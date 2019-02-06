@@ -32,6 +32,18 @@ config :materia, Materia.Authenticator,
   secret_key: "VlY6rTO8s+oM6/l4tPY0mmpKubd1zLEDSKxOjHA4r90ifZzCOYVY5IBEhdicZStw",
   allowed_algos: ["HS256"]
 
+# Configures Guardian
+config :materia, Materia.UserAuthenticator,
+  issuer: "Materia",
+  secret_key: "VlY6rTO8s+oM6/l4tPY0mmpKubd1zLEDSKxOjHA4r90ifZzCOYVY5IBEhdicZStw",
+  allowed_algos: ["HS256"]
+
+# Configures Guardian
+config :materia, Materia.AccountAuthenticator,
+  issuer: "Materia",
+  secret_key: "VlY6rTO8s+oM6/l4tPY0mmpKubd1zLEDSKxOjHA4r90ifZzCOYVY5IBEhdicZStw",
+  allowed_algos: ["HS256"]
+
 config :guardian, Guardian.DB,
   repo: MateriaCareer.Test.Repo,  #<- mod your app repo
   schema_name: "guardian_tokens", # default
