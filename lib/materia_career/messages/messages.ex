@@ -222,8 +222,9 @@ defmodule MateriaCareer.Messages do
     user = Materia.Accounts.get_user!(user_id)
     projects = Projects.list_project_by_user_id(user_id, [2])
     # TODO 入力されたProjectIDの妥当性チェック
+
     _result =
-    if Enum.any?(projects, fn(project) -> project.id == String.to_integer(attr["project_id"]) end) do
+    if Enum.any?(projects, fn(project) -> "#{project.id}" == "#{attr["project_id"]}" end) do
       offer_attr = attr
       |> Map.put("from_user_id", user.id)
       |> Map.put("offer_time", CalendarUtil.now())

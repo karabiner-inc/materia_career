@@ -102,7 +102,7 @@ defmodule MateriaCareer.Projects do
 
     project =
       projects
-      |> Enum.find(fn project -> project.id == String.to_integer(attrs["id"]) end)
+      |> Enum.find(fn project -> "#{project.id}" == "#{attrs["id"]}" end)
 
     if project == nil do
       raise BusinessError, message: "project not found. project_id:#{attrs["id"]}"
@@ -412,7 +412,7 @@ defmodule MateriaCareer.Projects do
     records = list_records_by_user_id(user_id)
 
     record = records
-    |> Enum.find(fn(record) -> record.id == String.to_integer(attrs["id"]) end)
+    |> Enum.find(fn(record) -> "#{record.id}" == "#{attrs["id"]}" end)
 
     if record == nil do
       Logger.debug("#{__MODULE__} update_my_record. record id:#{attrs["id"]} not found.")
