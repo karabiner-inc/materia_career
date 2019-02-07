@@ -71,3 +71,10 @@ alias MateriaCareer.Messages
     offer_time: MateriaUtils.Calendar.CalendarUtil.now()
   }
 )
+
+{:ok, _} = Projects.create_record(%{
+  title: "title1",
+  discription: "discription1",
+  user_id: 1,
+  project_id: 1
+})
