@@ -42,7 +42,7 @@ defmodule MateriaCareerWeb.ProjectController do
     end
   end
 
-  def list_my_plojects(conn, %{"status_list" => status_list}) do
+  def list_my_projects(conn, %{"status_list" => status_list}) do
     user_id = MateriaWeb.ControllerBase.get_user_id(conn)
 
     projects = Projects.list_project_by_user_id(user_id, status_list)
@@ -57,7 +57,6 @@ defmodule MateriaCareerWeb.ProjectController do
 
   def update_my_project(conn, project_params) do
     user_id = MateriaWeb.ControllerBase.get_user_id(conn)
-
     MateriaWeb.ControllerBase.transaction_flow(conn, :project, Projects, :update_project, [user_id, project_params])
   end
 

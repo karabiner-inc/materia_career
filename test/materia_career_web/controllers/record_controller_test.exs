@@ -125,10 +125,12 @@ defmodule MateriaCareerWeb.RecordControllerTest do
         project_id: 1
       }
       create_conn = post(conn, record_path(conn, :create_my_record, req))
-      data = json_response(create_conn, 201)
+      %{"id" => id} = json_response(create_conn, 201)
+
+      IO.inspect(id)
 
       req = %{
-        id: data["id"],
+        id: id,
         title: "updated title1",
         discription: "updated discription1",
         project_id: 1

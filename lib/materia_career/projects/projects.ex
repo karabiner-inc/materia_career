@@ -102,7 +102,7 @@ defmodule MateriaCareer.Projects do
 
     project =
       projects
-      |> Enum.find(fn project -> project.id == attrs["id"] end)
+      |> Enum.find(fn project -> project.id == String.to_integer(attrs["id"]) end)
 
     if project == nil do
       raise BusinessError, message: "project not found. project_id:#{attrs["id"]}"

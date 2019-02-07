@@ -62,7 +62,14 @@ defmodule MateriaCareerWeb.ProjectControllerTest do
   end
 
   setup %{conn: conn} do
-    {:ok, conn: put_req_header(conn, "accept", "application/json")}
+    %{"access_token" => access_token} = 
+      conn
+      |> post(authenticator_path(conn, :sign_in), %{email: "hogehoge@example.com", password: "hogehoge"})
+      |> json_response(201)
+    conn = conn 
+    |> put_req_header("accept", "application/json")
+    |> put_req_header("authorization", "Bearer " <> access_token)
+    {:ok, conn: conn}
   end
 
   describe "index" do
@@ -181,6 +188,36 @@ defmodule MateriaCareerWeb.ProjectControllerTest do
         get(conn, project_path(conn, :show, project))
       end)
     end
+  end
+
+  describe "projects API with authentication" do
+
+
+    test "get list-my-projects", %{conn: conn} do
+      conn = get(conn, project_path(conn, :list_my_projects, %{status_list: [1,2]}))
+      assert json_response(conn, 200) |> Enum.count > 0
+    end
+
+    test "post create-my-project", %{conn: conn} do
+      req = %{title: "project1"}
+      conn = post(conn, project_path(conn, :create_my_project, req))
+      assert response(conn, 201)
+    end
+
+    test "post update-my-project", %{conn: conn} do
+
+      req = %{title: "project1"}
+      create_conn = post(conn, project_path(conn, :create_my_project, req))
+      %{"id" => id} = json_response(create_conn, 201)
+
+      req = %{
+        id: id,
+        title: "updated project1",
+      }
+      conn = post(conn, project_path(conn, :update_my_project, req))
+      assert response(conn, 201)
+    end
+
   end
 
   defp create_project(_) do
