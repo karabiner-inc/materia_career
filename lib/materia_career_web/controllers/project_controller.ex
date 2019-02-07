@@ -43,20 +43,20 @@ defmodule MateriaCareerWeb.ProjectController do
   end
 
   def list_my_plojects(conn, %{"status_list" => status_list}) do
-    user_id = String.to_integer(conn.private.guardian_default_claims["sub"])
+    user_id = MateriaWeb.ControllerBase.get_user_id(conn)
 
     projects = Projects.list_project_by_user_id(user_id, status_list)
     render(conn, "index.json", projects: projects)
   end
 
   def create_my_project(conn, project_params) do
-    user_id = String.to_integer(conn.private.guardian_default_claims["sub"])
+    user_id = MateriaWeb.ControllerBase.get_user_id(conn)
 
     MateriaWeb.ControllerBase.transaction_flow(conn, :project, Projects, :create_my_project, [user_id, project_params])
   end
 
   def update_my_project(conn, project_params) do
-    user_id = String.to_integer(conn.private.guardian_default_claims["sub"])
+    user_id = MateriaWeb.ControllerBase.get_user_id(conn)
 
     MateriaWeb.ControllerBase.transaction_flow(conn, :project, Projects, :update_project, [user_id, project_params])
   end

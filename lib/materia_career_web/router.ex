@@ -60,6 +60,11 @@ defmodule MateriaCareerWeb.Router do
     post "/update-my-offer", OfferController, :update_my_offer
     post "/answer-offer-to-my-organization", OfferController, :answer_offer_to_my_organization
     post "/answer-offer-to-me", OfferController, :answer_offer_to_me
+
+    # records
+    get "/list-my-records", RecordController, :list_my_records
+    post "/create-my-record", RecordController, :create_my_record
+    post "/update-my-record", RecordController, :update_my_record
   end
 
   scope "/api", MateriaCareerWeb do

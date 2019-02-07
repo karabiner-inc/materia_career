@@ -19,13 +19,20 @@ defmodule MateriaCareerWeb.RecordControllerTest do
   end
 
   setup %{conn: conn} do
-    {:ok, conn: put_req_header(conn, "accept", "application/json")}
+    %{"access_token" => access_token} = 
+      conn
+      |> post(authenticator_path(conn, :sign_in), %{email: "hogehoge@example.com", password: "hogehoge"})
+      |> json_response(201)
+    conn = conn 
+    |> put_req_header("accept", "application/json")
+    |> put_req_header("authorization", "Bearer " <> access_token)
+    {:ok, conn: conn}
   end
 
   describe "index" do
     test "lists all records", %{conn: conn} do
       conn = get(conn, record_path(conn, :index))
-      assert json_response(conn, 200) == []
+      assert json_response(conn, 200) |> Enum.count > 0
     end
   end
 
@@ -90,6 +97,46 @@ defmodule MateriaCareerWeb.RecordControllerTest do
         get(conn, record_path(conn, :show, record))
       end)
     end
+  end
+
+  describe "records API with authentication" do
+
+
+    test "get list-my-records", %{conn: conn} do
+      conn = get(conn, record_path(conn, :list_my_records))
+      assert json_response(conn, 200) |> Enum.count > 0
+    end
+
+    test "post create-my-record", %{conn: conn} do
+      req = %{
+        title: "title1",
+        discription: "discription1",
+        project_id: 1
+      }
+      conn = post(conn, record_path(conn, :create_my_record, req))
+      assert response(conn, 201)
+    end
+
+    test "post update-my-record", %{conn: conn} do
+
+      req = %{
+        title: "title1",
+        discription: "discription1",
+        project_id: 1
+      }
+      create_conn = post(conn, record_path(conn, :create_my_record, req))
+      data = json_response(create_conn, 201)
+
+      req = %{
+        id: data["id"],
+        title: "updated title1",
+        discription: "updated discription1",
+        project_id: 1
+      }
+      conn = post(conn, record_path(conn, :update_my_record, req))
+      assert response(conn, 201)
+    end
+
   end
 
   defp create_record(_) do

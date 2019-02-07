@@ -42,15 +42,21 @@ defmodule MateriaCareerWeb.RecordController do
     end
   end
 
-  def create_my_record(conn, record_params) do
-    user_id = String.to_integer(conn.private.guardian_default_claims["sub"])
+  def list_my_records(conn, _) do
+    user_id = MateriaWeb.ControllerBase.get_user_id(conn)
+    records = Projects.list_records_by_user_id(user_id)
+    render(conn, "index.json", records: records)
+  end
 
-    Servicex.ControllerBase.transaction_flow(conn, :record, MateriaCareer.Projects, :create_my_record, [user_id, record_params])
+  def create_my_record(conn, record_params) do
+    user_id = MateriaWeb.ControllerBase.get_user_id(conn)
+
+    MateriaWeb.ControllerBase.transaction_flow(conn, :record, MateriaCareer.Projects, :create_my_record, [user_id, record_params])
   end
 
   def update_my_record(conn, record_params) do
-    user_id = String.to_integer(conn.private.guardian_default_claims["sub"])
+    user_id = MateriaWeb.ControllerBase.get_user_id(conn)
 
-    Servicex.ControllerBase.transaction_flow(conn, :record, MateriaCareer.Projects, :update_my_record, [user_id, record_params])
+    MateriaWeb.ControllerBase.transaction_flow(conn, :record, MateriaCareer.Projects, :update_my_record, [user_id, record_params])
   end
 end

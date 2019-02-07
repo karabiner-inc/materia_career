@@ -324,6 +324,21 @@ defmodule MateriaCareer.Projects do
   alias MateriaCareer.Projects.Record
 
   @doc """
+  Returns the list of my records.
+
+  ## Examples
+
+      iex> list_records_by_user_id()
+      [%Record{}, ...]
+
+  """
+  def list_records_by_user_id(user_id) do
+    Record
+    |> where([p], p.user_id == ^user_id)
+    |> @repo.all()
+  end
+
+  @doc """
   Returns the list of records.
 
   ## Examples
@@ -381,11 +396,10 @@ defmodule MateriaCareer.Projects do
     if attrs["project_id"] == nil do
         attrs
     else
-        project = Organizations.get_project!(attrs["project_id"])
-        Map.put(attrs, :project_id, project.id)
+        project = get_project!(attrs["project_id"])
+        Map.put(attrs, "project_id", project.id)
     end
     {:ok, record} = create_record(attrs)
-
     tags = attrs["tags"]
     merge_record_tag(record, tags)
     record = preload_record(record)
@@ -395,9 +409,10 @@ defmodule MateriaCareer.Projects do
 
   def update_my_record(_result, user_id, attrs \\ %{}) do
 
-    user = Accounts.get_user!(user_id)
-    record = user.records
-    |> Enum.find(fn(record) -> record.id == attrs["id"] end)
+    records = list_records_by_user_id(user_id)
+
+    record = records
+    |> Enum.find(fn(record) -> record.id == String.to_integer(attrs["id"]) end)
 
     if record == nil do
       Logger.debug("#{__MODULE__} update_my_record. record id:#{attrs["id"]} not found.")
@@ -408,10 +423,12 @@ defmodule MateriaCareer.Projects do
     if attrs["project_id"] == nil do
         attrs
     else
-        project = Organizations.get_project!(attrs["project_id"])
-        Map.put(attrs, :project_id, project.id)
+        project = get_project!(attrs["project_id"])
+        Map.put(attrs, "project_id", project.id)
     end
     {:ok, record} = update_record(record, attrs)
+
+    IO.inspect(record)
 
     tags = attrs["tags"]
     merge_record_tag(record, tags)
@@ -550,15 +567,14 @@ defmodule MateriaCareer.Projects do
   # end
 
   def get_record_tag_by_record_id_with_lock(_result, record_id) do
-    redord_tags = RecordTag
+    record_tags = RecordTag
     |> where(record_id: ^record_id)
     |> @repo.all()
-    {:ok, redord_tags}
+    {:ok, record_tags}
   end
 
   def merge_record_tags(record, tags) do
     {:ok, record_tags}  = get_record_tag_by_record_id_with_lock(%{}, record.id)
-
     tags
     |> Enum.map(fn(tag) ->
         if Enum.any?(record_tags, fn(record_tag) -> record_tag.tag_id == tag.id end) do
