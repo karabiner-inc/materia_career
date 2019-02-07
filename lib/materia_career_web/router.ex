@@ -45,10 +45,26 @@ defmodule MateriaCareerWeb.Router do
   end
 
   scope "/api", MateriaCareerWeb do
-    pipe_through [ :api, :tmp_user_auth]
-    post "/my-projects", ProjectController, :list_my_plojects
+    pipe_through [ :api, :guardian_auth]
+    # projects
+    get "/list-my-projects", ProjectController, :list_my_projects
     post "/create-my-project", ProjectController, :create_my_project
     post "/update-my-project", ProjectController, :update_my_project
+    
+    # offers
+    get "/list-my-offers", OfferController, :list_my_offers
+    post "/list-my-projects-offers", OfferController, :list_my_projects_offers
+    post "/create-my-organization-offer", OfferController, :create_my_organization_offer
+    post "/create-my-offer", OfferController, :create_my_offer
+    post "/update-my-organization-offer", OfferController, :update_my_organization_offer
+    post "/update-my-offer", OfferController, :update_my_offer
+    post "/answer-offer-to-my-organization", OfferController, :answer_offer_to_my_organization
+    post "/answer-offer-to-me", OfferController, :answer_offer_to_me
+
+    # records
+    get "/list-my-records", RecordController, :list_my_records
+    post "/create-my-record", RecordController, :create_my_record
+    post "/update-my-record", RecordController, :update_my_record
   end
 
   scope "/api", MateriaCareerWeb do
