@@ -428,8 +428,6 @@ defmodule MateriaCareer.Projects do
     end
     {:ok, record} = update_record(record, attrs)
 
-    IO.inspect(record)
-
     tags = attrs["tags"]
     merge_record_tag(record, tags)
     record = preload_record(record)

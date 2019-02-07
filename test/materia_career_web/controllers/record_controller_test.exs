@@ -127,8 +127,6 @@ defmodule MateriaCareerWeb.RecordControllerTest do
       create_conn = post(conn, record_path(conn, :create_my_record, req))
       %{"id" => id} = json_response(create_conn, 201)
 
-      IO.inspect(id)
-
       req = %{
         id: id,
         title: "updated title1",
