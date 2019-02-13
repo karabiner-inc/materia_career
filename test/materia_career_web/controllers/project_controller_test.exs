@@ -197,8 +197,8 @@ defmodule MateriaCareerWeb.ProjectControllerTest do
   end
 
   describe "projects API with authentication" do
-    test "get list-my-projects", %{conn: conn} do
-      conn = get(conn, project_path(conn, :list_my_projects, %{status_list: [1, 2]}))
+    test "post list-my-projects", %{conn: conn} do
+      conn = post(conn, project_path(conn, :list_my_projects, %{status_list: [1, 2]}))
       assert json_response(conn, 200) |> Enum.count() > 0
     end
 

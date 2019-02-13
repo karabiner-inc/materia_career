@@ -4,7 +4,8 @@ defmodule MateriaCareer.Repo.Migrations.CreateRecords do
   def change do
     create table(:records) do
       add :title, :string
-      add :discription, :string
+      add :description, :string
+      add :score, :float
       add :user_id, references(:users, on_delete: :nothing)
       add :project_id, references(:projects, on_delete: :nothing)
       add :lock_version, :bigint
