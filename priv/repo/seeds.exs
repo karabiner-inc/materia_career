@@ -74,7 +74,7 @@ alias MateriaCareer.Messages
 
 {:ok, _} = Projects.create_record(%{
   title: "title1",
-  discription: "discription1",
+  description: "description1",
   user_id: 1,
   project_id: 1
 })
