@@ -17,7 +17,8 @@ defmodule MateriaCareerWeb.RecordView do
   def render("record.json", %{record: record}) do
     record_map = %{id: record.id,
       title: record.title,
-      discription: record.discription,
+      description: record.description,
+      score: record.score,
       lock_version: record.lock_version,
     }
 

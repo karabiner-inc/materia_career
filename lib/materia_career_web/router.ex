@@ -47,7 +47,7 @@ defmodule MateriaCareerWeb.Router do
   scope "/api", MateriaCareerWeb do
     pipe_through [ :api, :guardian_auth]
     # projects
-    get "/list-my-projects", ProjectController, :list_my_projects
+    post "/list-my-projects", ProjectController, :list_my_projects
     post "/create-my-project", ProjectController, :create_my_project
     post "/update-my-project", ProjectController, :update_my_project
     

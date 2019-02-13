@@ -4,14 +4,15 @@ defmodule MateriaCareerWeb.RecordControllerTest do
   alias MateriaCareer.Projects
   alias MateriaCareer.Projects.Record
 
-  @create_attrs %{discription: "some discription", title: "some title", user_id: 1, project_id: nil}
+  @create_attrs %{description: "some description", title: "some title", score: 10.0, user_id: 1, project_id: nil}
   @update_attrs %{
-    discription: "some updated discription",
+    description: "some updated description",
     title: "some updated title",
+    score: 12.0, 
     user_id: 1,
     project_id: nil
   }
-  @invalid_attrs %{discription: nil, title: nil, user_id: nil}
+  @invalid_attrs %{description: nil, title: nil, user_id: nil}
 
   def fixture(:record) do
     {:ok, record} = Projects.create_record(@create_attrs)
@@ -45,8 +46,9 @@ defmodule MateriaCareerWeb.RecordControllerTest do
 
       assert json_response(conn, 200) == %{
                "id" => id,
-               "discription" => "some discription",
+               "description" => "some description",
                "title" => "some title",
+               "score" => 10.0,
                "lock_version" => 1,
                "project" => nil,
                "tags" => nil,
@@ -71,8 +73,9 @@ defmodule MateriaCareerWeb.RecordControllerTest do
 
       assert json_response(conn, 200) == %{
                "id" => id,
-               "discription" => "some updated discription",
+               "description" => "some updated description",
                "title" => "some updated title",
+               "score" => 12.0,
                "lock_version" => 2,
                "project" => nil,
                "tags" => nil,
@@ -110,7 +113,8 @@ defmodule MateriaCareerWeb.RecordControllerTest do
     test "post create-my-record", %{conn: conn} do
       req = %{
         title: "title1",
-        discription: "discription1",
+        description: "description1",
+        score: 10,
         project_id: 1
       }
       conn = post(conn, record_path(conn, :create_my_record, req))
@@ -121,7 +125,8 @@ defmodule MateriaCareerWeb.RecordControllerTest do
 
       req = %{
         title: "title1",
-        discription: "discription1",
+        description: "description1",
+        score: 10,
         project_id: 1
       }
       create_conn = post(conn, record_path(conn, :create_my_record, req))
@@ -130,7 +135,8 @@ defmodule MateriaCareerWeb.RecordControllerTest do
       req = %{
         id: id,
         title: "updated title1",
-        discription: "updated discription1",
+        description: "updated description1",
+        score: 12,
         project_id: 1
       }
       conn = post(conn, record_path(conn, :update_my_record, req))
