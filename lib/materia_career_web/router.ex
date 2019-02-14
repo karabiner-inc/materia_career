@@ -65,6 +65,10 @@ defmodule MateriaCareerWeb.Router do
     get "/list-my-records", RecordController, :list_my_records
     post "/create-my-record", RecordController, :create_my_record
     post "/update-my-record", RecordController, :update_my_record
+
+    # skills
+    get "/list-my-skills", SkillController, :list_my_skills
+
   end
 
   scope "/api", MateriaCareerWeb do

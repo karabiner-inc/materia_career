@@ -42,7 +42,7 @@ defmodule MateriaCareerWeb.SkillController do
 
   def list_my_skills(conn, _params) do
     user_id = MateriaWeb.ControllerBase.get_user_id(conn)
-    skills = Features.list_skills()
+    skills = Features.list_my_skills(user_id)
     render(conn, "index.json", skills: skills)
   end
 

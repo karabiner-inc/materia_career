@@ -14,7 +14,14 @@ defmodule MateriaCareerWeb.SkillControllerTest do
   end
 
   setup %{conn: conn} do
-    {:ok, conn: put_req_header(conn, "accept", "application/json")}
+    %{"access_token" => access_token} = 
+      conn
+      |> post(authenticator_path(conn, :sign_in), %{email: "hogehoge@example.com", password: "hogehoge"})
+      |> json_response(201)
+    conn = conn 
+    |> put_req_header("accept", "application/json")
+    |> put_req_header("authorization", "Bearer " <> access_token)
+    {:ok, conn: conn}
   end
 
   describe "index" do
@@ -32,9 +39,9 @@ defmodule MateriaCareerWeb.SkillControllerTest do
       conn = get conn, skill_path(conn, :show, id)
       assert json_response(conn, 200)["data"] == %{
         "id" => id,
-        "end_date" => ~D[2010-04-17],
+        "end_date" => "2010-04-17",
         "name" => "some name",
-        "start_date" => ~D[2010-04-17],
+        "start_date" => "2010-04-17",
         "subject" => "some subject"}
     end
 
@@ -54,9 +61,9 @@ defmodule MateriaCareerWeb.SkillControllerTest do
       conn = get conn, skill_path(conn, :show, id)
       assert json_response(conn, 200)["data"] == %{
         "id" => id,
-        "end_date" => ~D[2011-05-18],
+        "end_date" => "2011-05-18",
         "name" => "some updated name",
-        "start_date" => ~D[2011-05-18],
+        "start_date" => "2011-05-18",
         "subject" => "some updated subject"}
     end
 
@@ -75,6 +82,13 @@ defmodule MateriaCareerWeb.SkillControllerTest do
       assert_error_sent 404, fn ->
         get conn, skill_path(conn, :show, skill)
       end
+    end
+  end
+
+  describe "my index" do
+    test "lists my all skills", %{conn: conn} do
+      conn = get conn, skill_path(conn, :list_my_skills)
+      assert json_response(conn, 200)["data"] == []
     end
   end
 
