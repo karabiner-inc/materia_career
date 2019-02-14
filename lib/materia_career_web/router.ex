@@ -73,6 +73,8 @@ defmodule MateriaCareerWeb.Router do
     resources "/tags", TagController, except: [:new, :edit]
     resources "/records", RecordController, except: [:new, :edit]
     resources "/offers", OfferController, except: [:new, :edit]
+    resources "/skill", SkillController, except: [:new, :edit]
+
   end
 
   scope "/api", MateriaWeb do
