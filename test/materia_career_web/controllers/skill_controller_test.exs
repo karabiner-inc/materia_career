@@ -139,6 +139,18 @@ defmodule MateriaCareerWeb.SkillControllerTest do
     end
   end
 
+  describe "delete my skill" do
+    setup [:create_my_skill]
+
+    test "delete my skill", %{conn: conn, skill: %Skill{id: id} = skill} do
+      conn = delete conn, skill_path(conn, :delete_my_skill, %{id: id})
+      assert response(conn, 204)
+      assert_error_sent 404, fn ->
+        get conn, skill_path(conn, :show, skill)
+      end
+    end
+  end
+
   defp create_skill(_) do
     skill = fixture(:skill)
     {:ok, skill: skill}

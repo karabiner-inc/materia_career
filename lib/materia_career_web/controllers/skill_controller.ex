@@ -61,7 +61,6 @@ defmodule MateriaCareerWeb.SkillController do
 
   def update_my_skill(conn, params) do
     user_id = MateriaWeb.ControllerBase.get_user_id(conn)
-    IO.inspect params
     skill = Features.get_skill!(params["id"])
     
     with true <- skill.user_id == user_id do
@@ -72,6 +71,18 @@ defmodule MateriaCareerWeb.SkillController do
         render(conn, "show.json", skill: skill)
       end
     end
+  end
+
+  def delete_my_skill(conn, %{"id" => id}) do
+    user_id = MateriaWeb.ControllerBase.get_user_id(conn)
+    skill = Features.get_skill!(id)
+    
+    with true <- skill.user_id == user_id do
+      with {:ok, %Skill{}} <- Features.delete_skill(skill) do
+        send_resp(conn, :no_content, "")
+      end
+    end
+
   end
 
 end
