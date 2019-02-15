@@ -13,6 +13,12 @@ defmodule MateriaCareerWeb.SkillControllerTest do
     skill
   end
 
+  def fixture(:my_skill) do
+    params = @create_attrs |> Map.put(:user_id, 1)
+    {:ok, skill} = Features.create_skill(params)
+    skill
+  end
+
   setup %{conn: conn} do
     %{"access_token" => access_token} = 
       conn
@@ -113,8 +119,33 @@ defmodule MateriaCareerWeb.SkillControllerTest do
     end
   end
 
+  describe "udpate my skill" do
+    setup [:create_my_skill]
+
+    test "update my skill", %{conn: conn, skill: %Skill{id: id} = skill} do
+      params = @update_attrs |> Map.put(:id, id)
+      conn = put conn, skill_path(conn, :update_my_skill), params
+      assert %{"id" => ^id} = json_response(conn, 200)
+
+      conn = get conn, skill_path(conn, :show, id)
+      assert json_response(conn, 200) == %{
+        "id" => id,
+        "end_date" => "2011-05-18",
+        "name" => "some updated name",
+        "start_date" => "2011-05-18",
+        "subject" => "some updated subject",
+        "user_id" => 1,
+      }
+    end
+  end
+
   defp create_skill(_) do
     skill = fixture(:skill)
+    {:ok, skill: skill}
+  end
+
+  defp create_my_skill(_) do
+    skill = fixture(:my_skill)
     {:ok, skill: skill}
   end
 end

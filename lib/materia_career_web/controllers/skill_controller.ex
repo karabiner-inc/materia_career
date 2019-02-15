@@ -59,4 +59,19 @@ defmodule MateriaCareerWeb.SkillController do
     end
   end
 
+  def update_my_skill(conn, params) do
+    user_id = MateriaWeb.ControllerBase.get_user_id(conn)
+    IO.inspect params
+    skill = Features.get_skill!(params["id"])
+    
+    with true <- skill.user_id == user_id do
+      skill_params = 
+      params
+        |> Map.put("user_id", user_id)
+      with {:ok, %Skill{} = skill} <- Features.update_skill(skill, skill_params) do
+        render(conn, "show.json", skill: skill)
+      end
+    end
+  end
+
 end
