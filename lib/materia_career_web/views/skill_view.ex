@@ -3,11 +3,11 @@ defmodule MateriaCareerWeb.SkillView do
   alias MateriaCareerWeb.SkillView
 
   def render("index.json", %{skills: skills}) do
-    %{data: render_many(skills, SkillView, "skill.json")}
+    render_many(skills, SkillView, "skill.json")
   end
 
   def render("show.json", %{skill: skill}) do
-    %{data: render_one(skill, SkillView, "skill.json")}
+    render_one(skill, SkillView, "skill.json")
   end
 
   def render("skill.json", %{skill: skill}) do
@@ -15,6 +15,8 @@ defmodule MateriaCareerWeb.SkillView do
       subject: skill.subject,
       name: skill.name,
       start_date: skill.start_date,
-      end_date: skill.end_date}
+      end_date: skill.end_date,
+      user_id: skill.user_id
+    }
   end
 end

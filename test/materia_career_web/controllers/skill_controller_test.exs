@@ -4,8 +4,8 @@ defmodule MateriaCareerWeb.SkillControllerTest do
   alias MateriaCareer.Features
   alias MateriaCareer.Features.Skill
 
-  @create_attrs %{end_date: ~D[2010-04-17], name: "some name", start_date: ~D[2010-04-17], subject: "some subject"}
-  @update_attrs %{end_date: ~D[2011-05-18], name: "some updated name", start_date: ~D[2011-05-18], subject: "some updated subject"}
+  @create_attrs %{end_date: "2010-04-17", name: "some name", start_date: "2010-04-17", subject: "some subject"}
+  @update_attrs %{end_date: "2011-05-18", name: "some updated name", start_date: "2011-05-18", subject: "some updated subject"}
   @invalid_attrs %{end_date: nil, name: nil, start_date: nil, subject: nil}
 
   def fixture(:skill) do
@@ -27,22 +27,24 @@ defmodule MateriaCareerWeb.SkillControllerTest do
   describe "index" do
     test "lists all skills", %{conn: conn} do
       conn = get conn, skill_path(conn, :index)
-      assert json_response(conn, 200)["data"] == []
+      assert json_response(conn, 200) == []
     end
   end
 
   describe "create skill" do
     test "renders skill when data is valid", %{conn: conn} do
       conn = post conn, skill_path(conn, :create), skill: @create_attrs
-      assert %{"id" => id} = json_response(conn, 201)["data"]
+      assert %{"id" => id} = json_response(conn, 201)
 
       conn = get conn, skill_path(conn, :show, id)
-      assert json_response(conn, 200)["data"] == %{
+      assert json_response(conn, 200) == %{
         "id" => id,
         "end_date" => "2010-04-17",
         "name" => "some name",
         "start_date" => "2010-04-17",
-        "subject" => "some subject"}
+        "subject" => "some subject",
+        "user_id" => nil
+      }
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
@@ -56,15 +58,17 @@ defmodule MateriaCareerWeb.SkillControllerTest do
 
     test "renders skill when data is valid", %{conn: conn, skill: %Skill{id: id} = skill} do
       conn = put conn, skill_path(conn, :update, skill), skill: @update_attrs
-      assert %{"id" => ^id} = json_response(conn, 200)["data"]
+      assert %{"id" => ^id} = json_response(conn, 200)
 
       conn = get conn, skill_path(conn, :show, id)
-      assert json_response(conn, 200)["data"] == %{
+      assert json_response(conn, 200) == %{
         "id" => id,
         "end_date" => "2011-05-18",
         "name" => "some updated name",
         "start_date" => "2011-05-18",
-        "subject" => "some updated subject"}
+        "subject" => "some updated subject",
+        "user_id" => nil
+      }
     end
 
     test "renders errors when data is invalid", %{conn: conn, skill: skill} do
@@ -88,7 +92,24 @@ defmodule MateriaCareerWeb.SkillControllerTest do
   describe "my index" do
     test "lists my all skills", %{conn: conn} do
       conn = get conn, skill_path(conn, :list_my_skills)
-      assert json_response(conn, 200)["data"] == []
+      assert json_response(conn, 200) == []
+    end
+  end
+
+  describe "create my skill" do
+    test "create my skill", %{conn: conn} do
+      conn = post conn, skill_path(conn, :create_my_skill), @create_attrs
+      assert %{"id" => id} = json_response(conn, 201)
+
+      conn = get conn, skill_path(conn, :show, id)
+      assert json_response(conn, 200) == %{
+        "id" => id,
+        "end_date" => "2010-04-17",
+        "name" => "some name",
+        "start_date" => "2010-04-17",
+        "subject" => "some subject",
+        "user_id" => 1,
+      }
     end
   end
 

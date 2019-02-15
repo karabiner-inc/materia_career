@@ -46,4 +46,17 @@ defmodule MateriaCareerWeb.SkillController do
     render(conn, "index.json", skills: skills)
   end
 
+  def create_my_skill(conn, params) do
+    user_id = MateriaWeb.ControllerBase.get_user_id(conn)
+    skill_params = 
+      params
+        |> Map.put("user_id", user_id)
+    with {:ok, %Skill{} = skill} <- Features.create_skill(skill_params) do
+      conn
+      |> put_status(:created)
+      |> put_resp_header("location", skill_path(conn, :show, skill))
+      |> render("show.json", skill: skill)
+    end
+  end
+
 end
