@@ -65,6 +65,12 @@ defmodule MateriaCareerWeb.Router do
     get "/list-my-records", RecordController, :list_my_records
     post "/create-my-record", RecordController, :create_my_record
     post "/update-my-record", RecordController, :update_my_record
+
+    # skills
+    get "/list-my-skills", SkillController, :list_my_skills
+    post "/create-my-skill", SkillController, :create_my_skill
+    put "/update-my-skill", SkillController, :update_my_skill
+    delete "/delete-my-skill", SkillController, :delete_my_skill
   end
 
   scope "/api", MateriaCareerWeb do
@@ -73,6 +79,8 @@ defmodule MateriaCareerWeb.Router do
     resources "/tags", TagController, except: [:new, :edit]
     resources "/records", RecordController, except: [:new, :edit]
     resources "/offers", OfferController, except: [:new, :edit]
+    resources "/skill", SkillController, except: [:new, :edit]
+
   end
 
   scope "/api", MateriaWeb do
