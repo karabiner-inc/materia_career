@@ -6,7 +6,10 @@ defmodule MateriaCareer.Features do
   import Ecto.Query, warn: false
 
   alias MateriaCareer.Features.Skill
+  alias Materia.Errors.BusinessError
+
   @repo Application.get_env(:materia, :repo)
+  require Logger
 
   @doc """
   Returns the list of skills.
@@ -53,6 +56,59 @@ defmodule MateriaCareer.Features do
     %Skill{}
     |> Skill.changeset(attrs)
     |> @repo.insert()
+  end
+
+  @doc """
+  Creates a skills.
+
+  ## Examples
+
+      iex> create_my_skills([%{field: value}, %{field: value}, %{field: value}])
+      {:ok, [%Skill{}, %Skill{}, %Skill{}]}
+
+      iex> create_my_skills([%{field: bad_value}])
+      ** (Ecto.NoResultsError)
+
+  """
+  def create_my_skills(user_id, attrs \\ [], is_delete) do
+    with {:ok, %{skills: result}} <- create_my_skills_multi(user_id, attrs, is_delete) do
+      {:ok, result}
+    else
+      {:error, :skills, [changeset | _], _} ->
+        Logger.debug("#{__MODULE__} transaction_flow. Ecto.Multi transaction was failed. errors")
+        changeset
+    end
+  end
+
+  defp create_my_skills_multi(user_id, attrs, is_delete) do
+    Ecto.Multi.new()
+    |> Ecto.Multi.run(:skills, fn _ ->
+
+      if is_delete do
+        from(s in Skill, where: s.user_id == ^user_id)
+        |> @repo.delete_all
+      end
+
+      result =
+        attrs
+        |> Enum.map(&(Map.put(&1, "user_id", user_id)))
+        |> Enum.map(&create_skill(&1))
+
+      errors =
+        result |> Enum.filter(fn {is_ok_or_error, _} -> is_ok_or_error == :error end)
+
+      errors_count = errors |> Enum.count()
+
+      cond do
+        errors_count == 0 ->
+          result = result |> Enum.map(fn {_, value} -> value end)
+          {:ok, result}
+
+        true ->
+          {:error, errors}
+      end
+    end)
+    |> @repo.transaction() 
   end
 
   @doc """

@@ -151,6 +151,37 @@ defmodule MateriaCareerWeb.SkillControllerTest do
     end
   end
 
+  describe "create my skills" do
+
+    test "create my skills after delete user data", %{conn: conn} do
+      # first add two data
+      conn2 = post conn, skill_path(conn, :create_my_skills), skills: [@create_attrs, @create_attrs]
+      assert response(conn2, 201)
+      assert json_response(conn2, 201) |> Enum.count == 2
+
+      # second add two data
+      conn2 = post conn, skill_path(conn, :create_my_skills), skills: [@create_attrs, @create_attrs]
+      
+      # check list
+      conn3 = get conn, skill_path(conn, :list_my_skills)
+      assert json_response(conn3, 200) |> Enum.count == 4
+
+      # add skill after delete 
+      conn4 = post conn, skill_path(conn, :create_my_skills), %{skills: [@create_attrs, @create_attrs], is_delete: true}
+      assert response(conn4, 201)
+      assert json_response(conn4, 201) |> Enum.count == 2
+      
+      conn5 = get conn, skill_path(conn, :list_my_skills)
+      assert json_response(conn5, 200) |> Enum.count == 2
+
+    end
+
+    test "error create my skills", %{conn: conn} do
+      conn = post conn, skill_path(conn, :create_my_skills), skills: [@create_attrs, %{}]
+      assert response(conn, 422)
+    end
+  end
+
   defp create_skill(_) do
     skill = fixture(:skill)
     {:ok, skill: skill}
