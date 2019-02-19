@@ -67,7 +67,7 @@ defmodule MateriaCareer.Features do
       {:ok, [%Skill{}, %Skill{}, %Skill{}]}
 
       iex> create_my_skills([%{field: bad_value}])
-      ** (Ecto.NoResultsError)
+      {:error, %Ecto.Changeset{}}
 
   """
   def create_my_skills(user_id, attrs \\ [], is_delete) do
