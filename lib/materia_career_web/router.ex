@@ -68,6 +68,7 @@ defmodule MateriaCareerWeb.Router do
 
     # skills
     get "/list-my-skills", SkillController, :list_my_skills
+    get "/list_user_skills", SkillController, :list_user_skills
     post "/create-my-skill", SkillController, :create_my_skill
     put "/update-my-skill", SkillController, :update_my_skill
     delete "/delete-my-skill", SkillController, :delete_my_skill
