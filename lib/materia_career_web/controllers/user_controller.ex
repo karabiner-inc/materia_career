@@ -6,6 +6,12 @@ defmodule MateriaCareerWeb.UserController do
 
   def index(conn, params) do
     status = Map.get(params, "status")
+    status = cond do
+      is_nil(status) -> nil
+      is_binary(status) -> String.to_integer(status)
+      is_integer(status) -> status
+      true -> nil
+    end
     users = Accounts.list_users_with_skills(status)
     render(conn, "index.json", users: users)
   end
