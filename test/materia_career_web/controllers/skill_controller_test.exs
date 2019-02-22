@@ -151,6 +151,16 @@ defmodule MateriaCareerWeb.SkillControllerTest do
     end
   end
 
+  describe "get skills by user_id" do
+    setup [:create_my_skill]
+
+    test "lists user's skills", %{conn: conn} do
+      conn = get conn, skill_path(conn, :list_user_skills, user_id: 1)
+      data = json_response(conn, 200)
+      assert data |> Enum.count > 0
+    end
+  end
+
   defp create_skill(_) do
     skill = fixture(:skill)
     {:ok, skill: skill}
