@@ -4,8 +4,9 @@ defmodule MateriaCareerWeb.UserController do
   action_fallback MateriaCareerWeb.FallbackController
   alias MateriaCareer.Accounts
 
-  def index(conn, _params) do
-    users = Accounts.list_users_with_skills()
+  def index(conn, params) do
+    status = Map.get(params, "status")
+    users = Accounts.list_users_with_skills(status)
     render(conn, "index.json", users: users)
   end
 

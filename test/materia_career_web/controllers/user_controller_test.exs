@@ -48,7 +48,15 @@ defmodule MateriaCareerWeb.UserControllerTest do
 
       assert skill["id"] == id
     end
+
+    test "list users with skills status==9", %{conn: conn, skill: %Skill{id: id} = skill} do
+      conn = get conn, user_path(conn, :index), status: 9
+      data = json_response(conn, 200)
+      assert data |> Enum.count ==  0
+    end
+
   end
+  
 
   describe "get user" do
     setup [:create_my_skill]
