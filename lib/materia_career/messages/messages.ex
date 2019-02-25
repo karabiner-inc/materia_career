@@ -52,7 +52,7 @@ defmodule MateriaCareer.Messages do
 
   def preload_offer(offer) do
     offer = offer
-    |> @repo.preload(:project)
+    |> @repo.preload([project: :organization])
     |> @repo.preload(:from_user)
     |> @repo.preload(:to_user)
   end
