@@ -120,6 +120,23 @@ defmodule MateriaCareer.Messages do
     {:ok, offer}
   end
 
+  def get_my_offer_and_to_me!(_result, offer_id, user_id, status) do
+    offers = Offer
+    |> where(from_user_id: ^user_id)
+    |> or_where(to_user_id: ^user_id)
+    |> where(id: ^offer_id)
+    |> where(status: ^status)
+    |> lock("FOR UPDATE")
+    |> @repo.all()
+
+    if length(offers) != 1 do
+      raise BusinessError, message: "user offer length was unexpected number. offer_id:#{offer_id} user_id:#{user_id} length:#{length(offers)}"
+    end
+
+    offer = preload_offer(Enum.at(offers, 0))
+    offer
+  end
+
   def get_offer_to_me!(_result, offer_id, to_user_id, status) do
     offers = Offer
     |> where(id: ^offer_id)

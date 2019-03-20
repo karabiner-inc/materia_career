@@ -52,6 +52,7 @@ defmodule MateriaCareerWeb.Router do
     post "/update-my-project", ProjectController, :update_my_project
     
     # offers
+    get "/my-offer", OfferController, :my_offer
     get "/list-my-offers", OfferController, :list_my_offers
     post "/list-my-projects-offers", OfferController, :list_my_projects_offers
     post "/create-my-organization-offer", OfferController, :create_my_organization_offer
