@@ -163,11 +163,16 @@ defmodule MateriaCareerWeb.OfferControllerTest do
 
   describe "offers API with authentication" do
 
-    setup [:create_project]
+    setup [:create_project, :create_offer]
 
     test "get list-my-offers", %{conn: conn} do
       conn = get(conn, offer_path(conn, :list_my_offers, %{status: 1}))
       assert json_response(conn, 200) |> Enum.count > 0
+    end
+
+    test "get my-offer", %{conn: conn, offer: offer} do
+      conn = get(conn, offer_path(conn, :my_offer, %{id: offer.id, status: 1}))
+      assert json_response(conn, 200)["id"] == offer.id
     end
 
     test "post list-my-projects-offers", %{conn: conn} do
