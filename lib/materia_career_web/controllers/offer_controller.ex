@@ -40,6 +40,12 @@ defmodule MateriaCareerWeb.OfferController do
     end
   end
 
+  def my_offer(conn, %{"id" => id, "status" => status}) do
+    user_id = MateriaWeb.ControllerBase.get_user_id(conn)
+    offer = Messages.get_my_offer_and_to_me!(%{}, id, user_id, status)
+    render(conn, "show.json", offer: offer)
+  end
+
   def list_my_offers(conn, %{"status" => status}) do
     user_id = MateriaWeb.ControllerBase.get_user_id(conn)
     offers = Messages.list_my_offer_by_status(user_id, status)
