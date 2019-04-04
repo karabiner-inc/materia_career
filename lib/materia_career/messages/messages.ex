@@ -250,14 +250,14 @@ defmodule MateriaCareer.Messages do
       project.organization.users 
       |> Enum.each(
           fn(user) ->
-            new_entry_email(user.email, name: user.name )
+            new_entry_email(user.email, [{"{!name}", user.name }] )
           end
         )
     else
       # 企業から個人へのスカウト
       # to_user_idのユーザ宛てにメールを送る
       user = Map.get(attr, "to_user_id") |> Materia.Accounts.get_user!
-      new_offer_email(user.email, name: user.name )
+      new_offer_email(user.email, [{"{!name}", user.name }] )
 
     end
   end
