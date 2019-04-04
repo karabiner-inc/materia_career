@@ -9,6 +9,8 @@ defmodule MateriaCareer.Messages do
   alias MateriaUtils.Calendar.CalendarUtil
   alias Materia.Errors.BusinessError
   alias MateriaCareer.Projects
+  alias Materia.Mails
+  require Logger
 
   @repo Application.get_env(:materia, :repo)
 
@@ -231,8 +233,33 @@ defmodule MateriaCareer.Messages do
     |> Map.put("offer_time", CalendarUtil.now())
 
     {:ok, created_offer} = create_offer(offer_attr)
+
+    spawn(__MODULE__, :switch_send_mail, [attr])
+    
     offer = preload_offer(created_offer)
     {:ok, offer}
+  end
+
+  def switch_send_mail(attr) do
+    if Map.get(attr, "to_user_id") == nil do
+      # 個人から企業へのエントリー
+      # 企業の代表者へメールを送る(organizations.user_id宛て)
+      project = Projects.get_project!(attr["project_id"])
+                |> @repo.preload([organization: :users])
+
+      project.organization.users 
+      |> Enum.each(
+          fn(user) ->
+            new_entry_email(user.email, name: user.name )
+          end
+        )
+    else
+      # 企業から個人へのスカウト
+      # to_user_idのユーザ宛てにメールを送る
+      user = Map.get(attr, "to_user_id") |> Materia.Accounts.get_user!
+      new_offer_email(user.email, name: user.name )
+
+    end
   end
 
   def create_my_organization_offer(_resutl, user_id, attr \\ %{}) do
@@ -321,6 +348,50 @@ defmodule MateriaCareer.Messages do
       _ -> raise BusinessError, message: "offer_id:#{offer_id} is not offer to you."
     end
 
+  end
+
+  defp new_entry_email(to_email, replace_list) do
+    config = Application.get_env(:materia, MateriaCareer.Offer)
+    template_type = config[:entry_template_type]
+    from_email = config[:system_from_email]
+    from_name = config[:system_from_name]
+    send_email(template_type, from_email, to_email, replace_list, from_name)
+  end
+
+  defp new_offer_email(to_email, replace_list) do
+    config = Application.get_env(:materia, MateriaCareer.Offer)
+    template_type = config[:offer_template_type]
+    from_email = config[:system_from_email]
+    from_name = config[:system_from_name]
+    send_email(template_type, from_email, to_email, replace_list, from_name)
+  end
+
+  defp send_email(template_type, from_email, email, replace_list, from_name \\ nil) do
+
+    if from_email == nil do
+      raise BusinessError,
+        message: "config :materia, MateriaCareer.Offer, system_from_email not found."
+    end
+
+    template = Mails.get_mail_template_by_mail_template_type(template_type)
+
+    if template == [] do
+      raise BusinessError, message: "mail_template not found. template_type: #{template_type}"
+    end
+    IO.inspect(Application.get_env(:materia, Materia.Mails.MailClient)[:client_module])
+
+    with {:ok, message} <-
+           Mails.send_mail(from_email, email, template.subject, template.body, replace_list, from_name) do
+      Logger.debug(
+        "#{__MODULE__} registration_user. send mail success. message:#{inspect(message)}"
+      )
+    else
+      {:error, reason} ->
+        Logger.debug(
+          "#{__MODULE__} registration_user. send mail error. reason:#{inspect(reason)}"
+        )
+        raise BusinessError, message: "send user registration mail error."
+    end
   end
 
 end
