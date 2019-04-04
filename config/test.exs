@@ -30,3 +30,26 @@ config :guardian, Guardian.DB,
  schema_name: "guardian_tokens", # default
 #token_types: ["refresh_token"], # store all token types if not set
  sweep_interval: 60 # default: 60 minutes
+
+# mail settings
+config :materia, Materia.Mails.MailClient,
+  client_module: Materia.Mails.MailClientSendGrid
+
+config :sendgrid, api_key: System.get_env("SENDGRID_API_KEY") || ""
+
+config :materia, Materia.Accounts,
+  system_from_email: "materia@karabiner.tech",
+  system_from_name: "MateriaCarrer運用チーム", # not effect when use Materia.Mails.MailClientAwsSes
+  # user_registration_request_mail_template_type: "user_registration_request",
+  # user_registration_url: "psn.analyzine.com/#/signup",
+  user_registration_completed_mail_template_type: "user_registration_completed",
+  sign_in_url: "psn.analyzine.com/#/signin",
+  password_reset_request_mail_template_type: "password_reset_request",
+  password_reset_url: "psn.analyzine.com/#/reset",
+  password_reset_completed_mail_template_type: "password_reset_completed"
+
+config :materia, MateriaCareer.Offer,
+  system_from_email: "materia@karabiner.tech",
+  system_from_name: "MateriaCarrer運用チーム",
+  entry_template_type: "new_entry",
+  offer_template_type: "new_offer"
