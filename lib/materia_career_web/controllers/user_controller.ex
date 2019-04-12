@@ -24,7 +24,7 @@ defmodule MateriaCareerWeb.UserController do
   def show_me(conn, _) do
     user_id = MateriaWeb.ControllerBase.get_user_id(conn)
     user = Accounts.get_user_with_skills!(user_id)
-    render(conn, "show.json", user: user)
+    render(conn, "show_non_privacy.json", user: user)
   end
 
 
