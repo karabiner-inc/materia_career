@@ -36,13 +36,19 @@ defmodule MateriaCareerWeb.OfferView do
     end
     result_map =
     if Ecto.assoc_loaded?(offer.from_user) && offer.from_user != nil do
-      Map.put(result_map, :from_user, UserView.render("user.json", %{user: offer.from_user}))
+      Map.put(result_map, :from_user, 
+        UserView.render("user.json", %{user: offer.from_user})
+        |> Map.put(:email, "mask")
+      )
     else
       Map.put(result_map, :from_user, nil)
     end
     result_map =
     if Ecto.assoc_loaded?(offer.to_user) && offer.to_user != nil do
-      Map.put(result_map, :to_user, UserView.render("user.json", %{user: offer.to_user}))
+      Map.put(result_map, :to_user, 
+        UserView.render("user.json", %{user: offer.to_user})
+        |> Map.put(:email, "mask")
+        )
     else
       Map.put(result_map, :to_user, nil)
     end
