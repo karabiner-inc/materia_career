@@ -17,7 +17,7 @@ defmodule MateriaCareerWeb.UserView do
     skills = render_many(user.skills, MateriaCareerWeb.SkillView, "skill.json")
 
     render_one(user, MateriaWeb.UserView, "user.json")
-    |> Map.delete(:email)
+    |> Map.put(:email, "mask")
     |> Map.put(:skills, skills)
   end
 
