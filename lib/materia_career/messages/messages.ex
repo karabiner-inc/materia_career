@@ -71,7 +71,7 @@ defmodule MateriaCareer.Messages do
 
   def list_my_project_offer_by_status(user_id, project_id_list, status) when is_list(project_id_list) do
 
-    projects = Projects.list_project_by_user_id(user_id, [2])
+    projects = Projects.list_project_by_user_id(user_id, [1, 2])
 
     my_project_id_list = project_id_list
     |> Enum.filter(fn(project_id) ->
@@ -264,7 +264,7 @@ defmodule MateriaCareer.Messages do
 
   def create_my_organization_offer(_resutl, user_id, attr \\ %{}) do
     user = Materia.Accounts.get_user!(user_id)
-    projects = Projects.list_project_by_user_id(user_id, [2])
+    projects = Projects.list_project_by_user_id(user_id, [1, 2])
     # TODO 入力されたProjectIDの妥当性チェック
 
     _result =
@@ -295,7 +295,7 @@ defmodule MateriaCareer.Messages do
   end
 
   def my_organization_offer?(user, offer) do
-    Projects.list_project_by_user_id(user.id, [2])
+    Projects.list_project_by_user_id(user.id, [1, 2])
     |> Enum.any?(fn(project) -> project.id == offer.project_id end)
   end
 
