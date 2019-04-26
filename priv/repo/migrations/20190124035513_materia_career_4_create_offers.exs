@@ -13,6 +13,7 @@ defmodule MateriaCareer.Repo.Migrations.CreateOffers do
       add :to_user_id, references(:users, on_delete: :nothing)
       add :offer_time, :utc_datetime
       add :answer_time, :utc_datetime
+      add :chat_room_id, :bigint
 
       timestamps()
     end
