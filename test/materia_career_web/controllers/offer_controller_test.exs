@@ -104,7 +104,8 @@ defmodule MateriaCareerWeb.OfferControllerTest do
                "project_id" => 1,
                "project" => nil,
                "offer_time" => "2019-01-01T12:00:00.000000Z",
-               "answer_time" => "2019-01-01T12:00:00.000000Z"
+               "answer_time" => "2019-01-01T12:00:00.000000Z",
+               "chat_room_id" => nil
              }
     end
 
@@ -138,7 +139,8 @@ defmodule MateriaCareerWeb.OfferControllerTest do
                "project_id" => 1,
                "project" => nil,
                "offer_time" => "2019-01-01T12:00:00.000000Z",
-               "answer_time" => "2019-01-01T12:00:00.000000Z"
+               "answer_time" => "2019-01-01T12:00:00.000000Z",
+               "chat_room_id" => nil
              }
     end
 

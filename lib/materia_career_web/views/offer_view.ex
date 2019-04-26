@@ -26,6 +26,7 @@ defmodule MateriaCareerWeb.OfferView do
       to_user_id: offer.to_user_id,
       offer_time: offer.offer_time,
       answer_time: offer.answer_time,
+      chat_room_id: offer.chat_room_id,
       lock_version: offer.lock_version
     }
     result_map =
