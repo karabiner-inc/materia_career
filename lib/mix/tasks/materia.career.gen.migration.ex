@@ -1,6 +1,7 @@
 defmodule Mix.Tasks.MateriaCareer.Gen.Migration do
   @shortdoc "Generates MateriaCareer's migration files."
 
+  use Mix.Task
   alias Mix.Tasks.Materia.Gen.Migration
 
   @migrations_file_path "priv/repo/migrations"
