@@ -4,7 +4,7 @@ defmodule MateriaCareerWeb.OfferController do
   alias MateriaCareer.Messages
   alias MateriaCareer.Messages.Offer
 
-  action_fallback MateriaWeb.FallbackController
+  action_fallback(MateriaWeb.FallbackController)
 
   def index(conn, _params) do
     offers = Messages.list_offers()
@@ -35,6 +35,7 @@ defmodule MateriaCareerWeb.OfferController do
 
   def delete(conn, %{"id" => id}) do
     offer = Messages.get_offer!(id)
+
     with {:ok, %Offer{}} <- Messages.delete_offer(offer) do
       send_resp(conn, :no_content, "")
     end
@@ -61,36 +62,70 @@ defmodule MateriaCareerWeb.OfferController do
   def create_my_offer(conn, offer_params) do
     user_id = MateriaWeb.ControllerBase.get_user_id(conn)
 
-    MateriaWeb.ControllerBase.transaction_flow(conn, :offer, MateriaCareer.Messages, :create_my_offer, [user_id, offer_params])
+    MateriaWeb.ControllerBase.transaction_flow(conn, :offer, MateriaCareer.Messages, :create_my_offer, [
+      user_id,
+      offer_params
+    ])
   end
 
   def create_my_organization_offer(conn, offer_params) do
     user_id = MateriaWeb.ControllerBase.get_user_id(conn)
 
-    MateriaWeb.ControllerBase.transaction_flow(conn, :offer, MateriaCareer.Messages, :create_my_organization_offer, [user_id, offer_params])
+    MateriaWeb.ControllerBase.transaction_flow(conn, :offer, MateriaCareer.Messages, :create_my_organization_offer, [
+      user_id,
+      offer_params
+    ])
   end
 
   def update_my_organization_offer(conn, offer_params) do
     user_id = MateriaWeb.ControllerBase.get_user_id(conn)
 
-    MateriaWeb.ControllerBase.transaction_flow(conn, :offer, MateriaCareer.Messages, :update_my_organization_offer, [user_id, offer_params])
+    MateriaWeb.ControllerBase.transaction_flow(conn, :offer, MateriaCareer.Messages, :update_my_organization_offer, [
+      user_id,
+      offer_params
+    ])
   end
 
   def update_my_offer(conn, offer_params) do
     user_id = MateriaWeb.ControllerBase.get_user_id(conn)
 
-    MateriaWeb.ControllerBase.transaction_flow(conn, :offer, MateriaCareer.Messages, :update_my_offer, [user_id, offer_params])
+    MateriaWeb.ControllerBase.transaction_flow(conn, :offer, MateriaCareer.Messages, :update_my_offer, [
+      user_id,
+      offer_params
+    ])
   end
 
-  def answer_offer_to_my_organization(conn, %{"offer_id" => offer_id, "status" => status, "answer_message" => answer_message, "lock_version" => lock_version}) do
+  def answer_offer_to_my_organization(conn, %{
+        "offer_id" => offer_id,
+        "status" => status,
+        "answer_message" => answer_message,
+        "lock_version" => lock_version
+      }) do
     user_id = MateriaWeb.ControllerBase.get_user_id(conn)
 
-    MateriaWeb.ControllerBase.transaction_flow(conn, :offer, MateriaCareer.Messages, :answer_offer_to_my_organization, [user_id, offer_id, status, answer_message, lock_version])
+    MateriaWeb.ControllerBase.transaction_flow(conn, :offer, MateriaCareer.Messages, :answer_offer_to_my_organization, [
+      user_id,
+      offer_id,
+      status,
+      answer_message,
+      lock_version
+    ])
   end
 
-  def answer_offer_to_me(conn, %{"offer_id" => offer_id, "status" => status, "answer_message" => answer_message, "lock_version" => lock_version}) do
+  def answer_offer_to_me(conn, %{
+        "offer_id" => offer_id,
+        "status" => status,
+        "answer_message" => answer_message,
+        "lock_version" => lock_version
+      }) do
     user_id = MateriaWeb.ControllerBase.get_user_id(conn)
 
-    MateriaWeb.ControllerBase.transaction_flow(conn, :offer, MateriaCareer.Messages, :answer_offer_to_me, [user_id, offer_id, status, answer_message, lock_version])
+    MateriaWeb.ControllerBase.transaction_flow(conn, :offer, MateriaCareer.Messages, :answer_offer_to_me, [
+      user_id,
+      offer_id,
+      status,
+      answer_message,
+      lock_version
+    ])
   end
 end

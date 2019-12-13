@@ -2,9 +2,8 @@ defmodule MateriaCareer.Tags.Tag do
   use Ecto.Schema
   import Ecto.Changeset
 
-
   schema "tags" do
-    field :label, :string
+    field(:label, :string)
 
     timestamps()
   end

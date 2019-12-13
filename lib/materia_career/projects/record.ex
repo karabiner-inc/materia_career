@@ -2,15 +2,14 @@ defmodule MateriaCareer.Projects.Record do
   use Ecto.Schema
   import Ecto.Changeset
 
-
   schema "records" do
-    field :description, :string
-    field :title, :string
-    field :score, :float, default: 0.0
-    field :lock_version, :integer, default: 0
-    belongs_to :user, Materia.Accounts.User
-    belongs_to :project, MateriaCareer.Projects.Project
-    many_to_many :tags, MateriaCareer.Tags.Tag, join_through: "record_tags"
+    field(:description, :string)
+    field(:title, :string)
+    field(:score, :float, default: 0.0)
+    field(:lock_version, :integer, default: 0)
+    belongs_to(:user, Materia.Accounts.User)
+    belongs_to(:project, MateriaCareer.Projects.Project)
+    many_to_many(:tags, MateriaCareer.Tags.Tag, join_through: "record_tags")
 
     timestamps()
   end

@@ -8,28 +8,28 @@ defmodule MateriaCareerWeb.ErrorView do
   # end
 
   def render("500.json", assigns) do
-    #IO.puts("#{__MODULE__} render. reason:#{inspect(assigns.conn.assigns.reason.term)}")
-    #conn = assigns.conn
-    #{:error, reason} = conn.assigns.reason.term
-    #error = %{
+    # IO.puts("#{__MODULE__} render. reason:#{inspect(assigns.conn.assigns.reason.term)}")
+    # conn = assigns.conn
+    # {:error, reason} = conn.assigns.reason.term
+    # error = %{
     #   error: "Internal Server Error",
     #   reason: inspect(reason) ,
-    #}
-    #Poison.encode!(error)
+    # }
+    # Poison.encode!(error)
     "Internal Server Error"
- end
+  end
 
- def render("404.json", assigns) do
-  #IO.puts("#{__MODULE__} render. reason:#{inspect(assigns.conn.assigns.reason.term)}")
-  #conn = assigns.conn
-  #{:error, reason} = conn.assigns.reason.term
-  #error = %{
-  #   error: "Internal Server Error",
-  #   reason: inspect(reason) ,
-  #}
-  #Poison.encode!(error)
-  "Not Found message :#{inspect(assigns)}"
-end
+  def render("404.json", assigns) do
+    # IO.puts("#{__MODULE__} render. reason:#{inspect(assigns.conn.assigns.reason.term)}")
+    # conn = assigns.conn
+    # {:error, reason} = conn.assigns.reason.term
+    # error = %{
+    #   error: "Internal Server Error",
+    #   reason: inspect(reason) ,
+    # }
+    # Poison.encode!(error)
+    "Not Found message :#{inspect(assigns)}"
+  end
 
   # By default, Phoenix returns the status message from
   # the template name. For example, "404.html" becomes

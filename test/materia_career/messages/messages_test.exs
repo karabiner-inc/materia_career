@@ -52,7 +52,7 @@ defmodule MateriaCareer.MessagesTest do
 
     test "list_offers/0 returns all offers" do
       offer = offer_fixture()
-      assert Messages.list_offers() |> Enum.filter(fn(x) -> x.id == offer.id end) |> Enum.at(0) == offer
+      assert Messages.list_offers() |> Enum.filter(fn x -> x.id == offer.id end) |> Enum.at(0) == offer
     end
 
     test "get_offer!/1 returns the offer with given id" do

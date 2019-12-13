@@ -4,7 +4,7 @@ use Mix.Config
 # you can enable the server option below.
 config :materia_career, MateriaCareerWeb.Test.Endpoint,
   http: [port: 4001],
-  #server: false,
+  # server: false,
   debug_errors: true,
   code_reloader: false,
   check_origin: false,
@@ -26,7 +26,9 @@ config :materia_career, repo: MateriaCareer.Test.Repo
 
 # Configures GuardianDB
 config :guardian, Guardian.DB,
- repo: MateriaCareer.Test.Repo,
- schema_name: "guardian_tokens", # default
-#token_types: ["refresh_token"], # store all token types if not set
- sweep_interval: 60 # default: 60 minutes
+  repo: MateriaCareer.Test.Repo,
+  # default
+  schema_name: "guardian_tokens",
+  # token_types: ["refresh_token"], # store all token types if not set
+  # default: 60 minutes
+  sweep_interval: 60

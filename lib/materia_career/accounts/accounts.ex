@@ -12,7 +12,7 @@ defmodule MateriaCareer.Accounts do
     |> merge_skills
   end
 
-  def list_users_with_skills(_status \\ nil)do
+  def list_users_with_skills(_status \\ nil) do
     Materia.Accounts.list_users()
     |> merge_skills
   end
@@ -25,11 +25,11 @@ defmodule MateriaCareer.Accounts do
 
   defp merge_skills(users) do
     skills = MateriaCareer.Features.list_skills()
+
     users
     |> Enum.map(fn user ->
       user_skills = skills |> Enum.filter(fn %{user_id: user_id} -> user_id == user.id end)
       user |> Map.put(:skills, user_skills)
     end)
   end
-
 end

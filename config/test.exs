@@ -4,7 +4,7 @@ use Mix.Config
 # you can enable the server option below.
 config :materia_career, MateriaCareerWeb.Test.Endpoint,
   http: [port: 4001],
-  #server: false,
+  # server: false,
   debug_errors: true,
   code_reloader: false,
   check_origin: false,
@@ -26,20 +26,22 @@ config :materia_career, repo: MateriaCareer.Test.Repo
 
 # Configures GuardianDB
 config :guardian, Guardian.DB,
- repo: MateriaCareer.Test.Repo,
- schema_name: "guardian_tokens", # default
-#token_types: ["refresh_token"], # store all token types if not set
- sweep_interval: 60 # default: 60 minutes
+  repo: MateriaCareer.Test.Repo,
+  # default
+  schema_name: "guardian_tokens",
+  # token_types: ["refresh_token"], # store all token types if not set
+  # default: 60 minutes
+  sweep_interval: 60
 
 # mail settings
-config :materia, Materia.Mails.MailClient,
-  client_module: Materia.Mails.MailClientSendGrid
+config :materia, Materia.Mails.MailClient, client_module: Materia.Mails.MailClientSendGrid
 
 config :sendgrid, api_key: System.get_env("SENDGRID_API_KEY") || ""
 
 config :materia, Materia.Accounts,
   system_from_email: "materia@karabiner.tech",
-  system_from_name: "MateriaCarrer運用チーム", # not effect when use Materia.Mails.MailClientAwsSes
+  # not effect when use Materia.Mails.MailClientAwsSes
+  system_from_name: "MateriaCarrer運用チーム",
   # user_registration_request_mail_template_type: "user_registration_request",
   # user_registration_url: "psn.analyzine.com/#/signup",
   user_registration_completed_mail_template_type: "user_registration_completed",

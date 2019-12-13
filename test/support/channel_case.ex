@@ -25,13 +25,13 @@ defmodule MateriaCareerWeb.ChannelCase do
     end
   end
 
-
   setup tags do
     :ok = Ecto.Adapters.SQL.Sandbox.checkout(MateriaCareer.Test.Repo)
+
     unless tags[:async] do
       Ecto.Adapters.SQL.Sandbox.mode(MateriaCareer.Test.Repo, {:shared, self()})
     end
+
     :ok
   end
-
 end

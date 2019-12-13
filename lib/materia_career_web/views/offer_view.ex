@@ -15,7 +15,8 @@ defmodule MateriaCareerWeb.OfferView do
   end
 
   def render("offer.json", %{offer: offer}) do
-    result_map = %{id: offer.id,
+    result_map = %{
+      id: offer.id,
       message_subject: offer.message_subject,
       offer_message: offer.offer_message,
       answer_message: offer.answer_message,
@@ -29,29 +30,36 @@ defmodule MateriaCareerWeb.OfferView do
       chat_room_id: offer.chat_room_id,
       lock_version: offer.lock_version
     }
+
     result_map =
-    if Ecto.assoc_loaded?(offer.project) && offer.project != nil do
-      Map.put(result_map, :project, ProjectView.render("project.json", %{project: offer.project}))
-    else
-      Map.put(result_map, :project, nil)
-    end
+      if Ecto.assoc_loaded?(offer.project) && offer.project != nil do
+        Map.put(result_map, :project, ProjectView.render("project.json", %{project: offer.project}))
+      else
+        Map.put(result_map, :project, nil)
+      end
+
     result_map =
-    if Ecto.assoc_loaded?(offer.from_user) && offer.from_user != nil do
-      Map.put(result_map, :from_user, 
-        UserView.render("user.json", %{user: offer.from_user})
-        |> Map.put(:email, "mask")
-      )
-    else
-      Map.put(result_map, :from_user, nil)
-    end
-    result_map =
-    if Ecto.assoc_loaded?(offer.to_user) && offer.to_user != nil do
-      Map.put(result_map, :to_user, 
-        UserView.render("user.json", %{user: offer.to_user})
-        |> Map.put(:email, "mask")
+      if Ecto.assoc_loaded?(offer.from_user) && offer.from_user != nil do
+        Map.put(
+          result_map,
+          :from_user,
+          UserView.render("user.json", %{user: offer.from_user})
+          |> Map.put(:email, "mask")
         )
-    else
-      Map.put(result_map, :to_user, nil)
-    end
+      else
+        Map.put(result_map, :from_user, nil)
+      end
+
+    result_map =
+      if Ecto.assoc_loaded?(offer.to_user) && offer.to_user != nil do
+        Map.put(
+          result_map,
+          :to_user,
+          UserView.render("user.json", %{user: offer.to_user})
+          |> Map.put(:email, "mask")
+        )
+      else
+        Map.put(result_map, :to_user, nil)
+      end
   end
 end

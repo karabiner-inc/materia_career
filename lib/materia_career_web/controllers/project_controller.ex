@@ -6,7 +6,7 @@ defmodule MateriaCareerWeb.ProjectController do
 
   alias Materia.Errors.BusinessError
 
-  action_fallback MateriaWeb.FallbackController
+  action_fallback(MateriaWeb.FallbackController)
 
   def index(conn, _params) do
     projects = Projects.list_projects()
@@ -37,6 +37,7 @@ defmodule MateriaCareerWeb.ProjectController do
 
   def delete(conn, %{"id" => id}) do
     project = Projects.get_project!(id)
+
     with {:ok, %Project{}} <- Projects.delete_project(project) do
       send_resp(conn, :no_content, "")
     end
@@ -59,5 +60,4 @@ defmodule MateriaCareerWeb.ProjectController do
     user_id = MateriaWeb.ControllerBase.get_user_id(conn)
     MateriaWeb.ControllerBase.transaction_flow(conn, :project, Projects, :update_project, [user_id, project_params])
   end
-
 end

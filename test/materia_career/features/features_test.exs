@@ -7,7 +7,12 @@ defmodule MateriaCareer.FeaturesTest do
     alias MateriaCareer.Features.Skill
 
     @valid_attrs %{end_date: ~D[2010-04-17], name: "some name", start_date: ~D[2010-04-17], subject: "some subject"}
-    @update_attrs %{end_date: ~D[2011-05-18], name: "some updated name", start_date: ~D[2011-05-18], subject: "some updated subject"}
+    @update_attrs %{
+      end_date: ~D[2011-05-18],
+      name: "some updated name",
+      start_date: ~D[2011-05-18],
+      subject: "some updated subject"
+    }
     @invalid_attrs %{end_date: nil, name: nil, start_date: nil, subject: nil}
 
     def skill_fixture(attrs \\ %{}) do
@@ -70,10 +75,22 @@ defmodule MateriaCareer.FeaturesTest do
   end
 
   describe "my skills" do
-    @valid_attrs %{end_date: ~D[2010-04-17], name: "some name", start_date: ~D[2010-04-17], subject: "some subject", user_id: 1}
-    @update_attrs %{end_date: ~D[2011-05-18], name: "some updated name", start_date: ~D[2011-05-18], subject: "some updated subject", user_id: 1}
+    @valid_attrs %{
+      end_date: ~D[2010-04-17],
+      name: "some name",
+      start_date: ~D[2010-04-17],
+      subject: "some subject",
+      user_id: 1
+    }
+    @update_attrs %{
+      end_date: ~D[2011-05-18],
+      name: "some updated name",
+      start_date: ~D[2011-05-18],
+      subject: "some updated subject",
+      user_id: 1
+    }
     @invalid_attrs %{end_date: nil, name: nil, start_date: nil, subject: nil, user_id: nil}
-    
+
     def skill_my_fixture(attrs \\ %{}) do
       {:ok, skill} =
         attrs

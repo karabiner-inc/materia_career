@@ -6,7 +6,7 @@ defmodule MateriaCareerWeb.RecordController do
 
   alias Ecto.Multi
 
-  action_fallback MateriaWeb.FallbackController
+  action_fallback(MateriaWeb.FallbackController)
 
   def index(conn, _params) do
     records = Projects.list_records()
@@ -37,6 +37,7 @@ defmodule MateriaCareerWeb.RecordController do
 
   def delete(conn, %{"id" => id}) do
     record = Projects.get_record!(id)
+
     with {:ok, %Record{}} <- Projects.delete_record(record) do
       send_resp(conn, :no_content, "")
     end
@@ -51,12 +52,18 @@ defmodule MateriaCareerWeb.RecordController do
   def create_my_record(conn, record_params) do
     user_id = MateriaWeb.ControllerBase.get_user_id(conn)
 
-    MateriaWeb.ControllerBase.transaction_flow(conn, :record, MateriaCareer.Projects, :create_my_record, [user_id, record_params])
+    MateriaWeb.ControllerBase.transaction_flow(conn, :record, MateriaCareer.Projects, :create_my_record, [
+      user_id,
+      record_params
+    ])
   end
 
   def update_my_record(conn, record_params) do
     user_id = MateriaWeb.ControllerBase.get_user_id(conn)
 
-    MateriaWeb.ControllerBase.transaction_flow(conn, :record, MateriaCareer.Projects, :update_my_record, [user_id, record_params])
+    MateriaWeb.ControllerBase.transaction_flow(conn, :record, MateriaCareer.Projects, :update_my_record, [
+      user_id,
+      record_params
+    ])
   end
 end

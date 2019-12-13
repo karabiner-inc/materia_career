@@ -2,10 +2,9 @@ defmodule MateriaCareer.Projects.RecordTag do
   use Ecto.Schema
   import Ecto.Changeset
 
-
   schema "record_tags" do
-    field :record_id, :id
-    field :tag_id, :id
+    field(:record_id, :id)
+    field(:tag_id, :id)
 
     timestamps()
   end

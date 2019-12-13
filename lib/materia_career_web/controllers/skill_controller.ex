@@ -4,7 +4,7 @@ defmodule MateriaCareerWeb.SkillController do
   alias MateriaCareer.Features
   alias MateriaCareer.Features.Skill
 
-  action_fallback MateriaCareerWeb.FallbackController
+  action_fallback(MateriaCareerWeb.FallbackController)
 
   def index(conn, _params) do
     skills = Features.list_skills()
@@ -35,6 +35,7 @@ defmodule MateriaCareerWeb.SkillController do
 
   def delete(conn, %{"id" => id}) do
     skill = Features.get_skill!(id)
+
     with {:ok, %Skill{}} <- Features.delete_skill(skill) do
       send_resp(conn, :no_content, "")
     end
@@ -53,9 +54,11 @@ defmodule MateriaCareerWeb.SkillController do
 
   def create_my_skill(conn, params) do
     user_id = MateriaWeb.ControllerBase.get_user_id(conn)
-    skill_params = 
+
+    skill_params =
       params
-        |> Map.put("user_id", user_id)
+      |> Map.put("user_id", user_id)
+
     with {:ok, %Skill{} = skill} <- Features.create_skill(skill_params) do
       conn
       |> put_status(:created)
@@ -67,11 +70,12 @@ defmodule MateriaCareerWeb.SkillController do
   def update_my_skill(conn, params) do
     user_id = MateriaWeb.ControllerBase.get_user_id(conn)
     skill = Features.get_skill!(params["id"])
-    
+
     with true <- skill.user_id == user_id do
-      skill_params = 
-      params
+      skill_params =
+        params
         |> Map.put("user_id", user_id)
+
       with {:ok, %Skill{} = skill} <- Features.update_skill(skill, skill_params) do
         render(conn, "show.json", skill: skill)
       end
@@ -81,13 +85,11 @@ defmodule MateriaCareerWeb.SkillController do
   def delete_my_skill(conn, %{"id" => id}) do
     user_id = MateriaWeb.ControllerBase.get_user_id(conn)
     skill = Features.get_skill!(id)
-    
+
     with true <- skill.user_id == user_id do
       with {:ok, %Skill{}} <- Features.delete_skill(skill) do
         send_resp(conn, :no_content, "")
       end
     end
-
   end
-
 end

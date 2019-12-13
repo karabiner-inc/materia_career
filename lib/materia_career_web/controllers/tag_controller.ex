@@ -4,7 +4,7 @@ defmodule MateriaCareerWeb.TagController do
   alias MateriaCareer.Tags
   alias MateriaCareer.Tags.Tag
 
-  action_fallback MateriaWeb.FallbackController
+  action_fallback(MateriaWeb.FallbackController)
 
   def index(conn, _params) do
     tags = Tags.list_tags()
@@ -35,6 +35,7 @@ defmodule MateriaCareerWeb.TagController do
 
   def delete(conn, %{"id" => id}) do
     tag = Tags.get_tag!(id)
+
     with {:ok, %Tag{}} <- Tags.delete_tag(tag) do
       send_resp(conn, :no_content, "")
     end
