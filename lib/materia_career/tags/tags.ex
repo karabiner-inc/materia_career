@@ -8,7 +8,6 @@ defmodule MateriaCareer.Tags do
   alias MateriaCareer.Tags.Tag
   @repo Application.get_env(:materia, :repo)
 
-
   @doc """
   Returns the list of tags.
 
@@ -107,11 +106,12 @@ defmodule MateriaCareer.Tags do
 
   def merge_tag(label) do
     tag = get_tag_by_label(label)
+
     tag =
-    if tag == nil do
-      {:ok, tag}  = create_tag(%{label: label})
-    else
-      {:ok, tag}
-    end
+      if tag == nil do
+        {:ok, tag} = create_tag(%{label: label})
+      else
+        {:ok, tag}
+      end
   end
 end

@@ -2,14 +2,13 @@ defmodule MateriaCareer.Features.Skill do
   use Ecto.Schema
   import Ecto.Changeset
 
-
   schema "skills" do
-    field :end_date, :date
-    field :name, :string
-    field :start_date, :date
-    field :subject, :string
+    field(:end_date, :date)
+    field(:name, :string)
+    field(:start_date, :date)
+    field(:subject, :string)
     # field :user_id, :id
-    belongs_to :user, Materia.Accounts.User
+    belongs_to(:user, Materia.Accounts.User)
 
     timestamps()
   end

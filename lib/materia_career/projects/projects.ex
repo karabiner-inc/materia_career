@@ -32,6 +32,7 @@ defmodule MateriaCareer.Projects do
 
   def list_project_by_user_id(user_id, status_list) when is_list(status_list) do
     user = Materia.Accounts.get_user!(user_id)
+
     Project
     |> where([p], p.organization_id == ^user.organization.id)
     |> where([p], p.status in ^status_list)
@@ -81,8 +82,18 @@ defmodule MateriaCareer.Projects do
 
     project =
       attrs
-      |> CalendarUtil.parse_datetime_strftime(["project_start_date","project_end_date","work_start_date","work_end_date"])
-      |> CalendarUtil.convert_time_local2utc(["project_start_date","project_end_date","work_start_date","work_end_date"]) 
+      |> CalendarUtil.parse_datetime_strftime([
+        "project_start_date",
+        "project_end_date",
+        "work_start_date",
+        "work_end_date"
+      ])
+      |> CalendarUtil.convert_time_local2utc([
+        "project_start_date",
+        "project_end_date",
+        "work_start_date",
+        "work_end_date"
+      ])
       |> Map.put("organization_id", user.organization.id)
       |> create_project()
       |> get_ok()
@@ -145,11 +156,7 @@ defmodule MateriaCareer.Projects do
     tags
     |> Enum.map(fn tag ->
       if Enum.any?(project_tags, fn project_tag -> project_tag.tag_id == tag.id end) do
-        Logger.debug(
-          "#{__MODULE__} merge_project_tags. skip project_tag. project_id:#{project.id} tag_id:#{
-            tag.id
-          }"
-        )
+        Logger.debug("#{__MODULE__} merge_project_tags. skip project_tag. project_id:#{project.id} tag_id:#{tag.id}")
       else
         {:ok, project_tag} = create_project_tag(%{project_id: project.id, tag_id: tag.id})
       end
@@ -159,11 +166,7 @@ defmodule MateriaCareer.Projects do
     project_tags
     |> Enum.map(fn project_tag ->
       if Enum.any?(tags, fn tag -> project_tag.tag_id == tag.id end) do
-        Logger.debug(
-          "#{__MODULE__} merge_project_tags. skip tag. project_id:#{project.id} tag_id:#{
-            project_tag.id
-          }"
-        )
+        Logger.debug("#{__MODULE__} merge_project_tags. skip tag. project_id:#{project.id} tag_id:#{project_tag.id}")
       else
         {:ok, result} = delete_project_tag(project_tag)
       end
@@ -382,9 +385,11 @@ defmodule MateriaCareer.Projects do
 
   """
   def create_record(attrs \\ %{}) do
-    {:ok, record} = %Record{}
-    |> Record.changeset(attrs)
-    |> @repo.insert()
+    {:ok, record} =
+      %Record{}
+      |> Record.changeset(attrs)
+      |> @repo.insert()
+
     {:ok, record}
   end
 
@@ -393,12 +398,13 @@ defmodule MateriaCareer.Projects do
     attrs = Map.put(attrs, "user_id", user.id)
 
     attrs =
-    if attrs["project_id"] == nil do
+      if attrs["project_id"] == nil do
         attrs
-    else
+      else
         project = get_project!(attrs["project_id"])
         Map.put(attrs, "project_id", project.id)
-    end
+      end
+
     {:ok, record} = create_record(attrs)
     tags = attrs["tags"]
     merge_record_tag(record, tags)
@@ -408,24 +414,25 @@ defmodule MateriaCareer.Projects do
   end
 
   def update_my_record(_result, user_id, attrs \\ %{}) do
-
     records = list_records_by_user_id(user_id)
 
-    record = records
-    |> Enum.find(fn(record) -> "#{record.id}" == "#{attrs["id"]}" end)
+    record =
+      records
+      |> Enum.find(fn record -> "#{record.id}" == "#{attrs["id"]}" end)
 
     if record == nil do
       Logger.debug("#{__MODULE__} update_my_record. record id:#{attrs["id"]} not found.")
-      raise ServicexError, message:  "record id:#{attrs["id"]} was not found."
+      raise ServicexError, message: "record id:#{attrs["id"]} was not found."
     end
 
     attrs =
-    if attrs["project_id"] == nil do
+      if attrs["project_id"] == nil do
         attrs
-    else
+      else
         project = get_project!(attrs["project_id"])
         Map.put(attrs, "project_id", project.id)
-    end
+      end
+
     {:ok, record} = update_record(record, attrs)
 
     tags = attrs["tags"]
@@ -444,16 +451,17 @@ defmodule MateriaCareer.Projects do
 
   def merge_record_tag(record, tags) do
     tags =
-        if tags == nil do
-            []
-        else
-            tags
-            |> Enum.map(fn(tag) ->
-                {:ok, tag} = Tags.merge_tag(tag)
-                tag
-            end)
-        end
-        merge_record_tags(record, tags)
+      if tags == nil do
+        []
+      else
+        tags
+        |> Enum.map(fn tag ->
+          {:ok, tag} = Tags.merge_tag(tag)
+          tag
+        end)
+      end
+
+    merge_record_tags(record, tags)
   end
 
   @doc """
@@ -541,7 +549,6 @@ defmodule MateriaCareer.Projects do
 
   # alias MateriaCareer.Projects.UserProfileTag
 
-
   # def create_user_profile_tag(attrs \\ %{}) do
   #   %UserProfileTag{}
   #   |> UserProfileTag.changeset(attrs)
@@ -565,29 +572,33 @@ defmodule MateriaCareer.Projects do
   # end
 
   def get_record_tag_by_record_id_with_lock(_result, record_id) do
-    record_tags = RecordTag
-    |> where(record_id: ^record_id)
-    |> @repo.all()
+    record_tags =
+      RecordTag
+      |> where(record_id: ^record_id)
+      |> @repo.all()
+
     {:ok, record_tags}
   end
 
   def merge_record_tags(record, tags) do
-    {:ok, record_tags}  = get_record_tag_by_record_id_with_lock(%{}, record.id)
+    {:ok, record_tags} = get_record_tag_by_record_id_with_lock(%{}, record.id)
+
     tags
-    |> Enum.map(fn(tag) ->
-        if Enum.any?(record_tags, fn(record_tag) -> record_tag.tag_id == tag.id end) do
-            Logger.debug("#{__MODULE__} merge_record_tags. skip record_tag. record_id:#{record.id} tag_id:#{tag.id}")
-        else
-            {:ok, _record_tag} = create_record_tag(%{record_id: record.id, tag_id: tag.id})
-        end
+    |> Enum.map(fn tag ->
+      if Enum.any?(record_tags, fn record_tag -> record_tag.tag_id == tag.id end) do
+        Logger.debug("#{__MODULE__} merge_record_tags. skip record_tag. record_id:#{record.id} tag_id:#{tag.id}")
+      else
+        {:ok, _record_tag} = create_record_tag(%{record_id: record.id, tag_id: tag.id})
+      end
     end)
+
     record_tags
-    |> Enum.map(fn(record_tag) ->
-        if Enum.any?(tags, fn(tag) -> record_tag.tag_id == tag.id end) do
-            Logger.debug("#{__MODULE__} merge_record_tags. skip tag. record_id:#{record.id} tag_id:#{record_tag.tag_id}")
-        else
-            {:ok, _result} = delete_record_tag(record_tag)
-        end
+    |> Enum.map(fn record_tag ->
+      if Enum.any?(tags, fn tag -> record_tag.tag_id == tag.id end) do
+        Logger.debug("#{__MODULE__} merge_record_tags. skip tag. record_id:#{record.id} tag_id:#{record_tag.tag_id}")
+      else
+        {:ok, _result} = delete_record_tag(record_tag)
+      end
     end)
   end
 
@@ -660,5 +671,4 @@ defmodule MateriaCareer.Projects do
   #   user_profile
   #   |> Map.put(:user_profile_tags, tags)
   # end
-
 end

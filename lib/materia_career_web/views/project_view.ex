@@ -4,7 +4,7 @@ defmodule MateriaCareerWeb.ProjectView do
 
   alias MateriaWeb.OrganizationView
   alias MateriaCareerWeb.TagView
-  alias MateriaCareer.Projects.Project 
+  alias MateriaCareer.Projects.Project
   alias MateriaUtils.Calendar.CalendarUtil
 
   def render("index.json", %{projects: projects}) do
@@ -16,7 +16,8 @@ defmodule MateriaCareerWeb.ProjectView do
   end
 
   def render("project.json", %{project: project}) do
-    project_map = %{id: project.id,
+    project_map = %{
+      id: project.id,
       title: project.title,
       thumbnail_img_url: project.thumbnail_img_url,
       back_ground_img_url: project.back_ground_img_url,
@@ -32,14 +33,20 @@ defmodule MateriaCareerWeb.ProjectView do
       pay: project.pay,
       work_style: project.work_style,
       location: project.location,
-      lock_version: project.lock_version,
+      lock_version: project.lock_version
     }
+
     project_map =
-    if Ecto.assoc_loaded?(project.organization) do
-      Map.put(project_map, :organization, OrganizationView.render("organization.json", %{organization: project.organization}))
-    else
-      Map.put(project_map, :organization, nil)
-    end
+      if Ecto.assoc_loaded?(project.organization) do
+        Map.put(
+          project_map,
+          :organization,
+          OrganizationView.render("organization.json", %{organization: project.organization})
+        )
+      else
+        Map.put(project_map, :organization, nil)
+      end
+
     project_map =
       if Ecto.assoc_loaded?(project.project_tags) do
         Map.put(project_map, :project_tags, TagView.render("index.json", %{tags: project.project_tags}))
@@ -47,5 +54,4 @@ defmodule MateriaCareerWeb.ProjectView do
         Map.put(project_map, :project_tags, [])
       end
   end
-
 end

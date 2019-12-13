@@ -11,7 +11,6 @@ defmodule MateriaCareerWeb.TagView do
   end
 
   def render("tag.json", %{tag: tag}) do
-    %{id: tag.id,
-      label: tag.label}
+    %{id: tag.id, label: tag.label}
   end
 end

@@ -11,7 +11,8 @@ defmodule MateriaCareerWeb.SkillView do
   end
 
   def render("skill.json", %{skill: skill}) do
-    %{id: skill.id,
+    %{
+      id: skill.id,
       subject: skill.subject,
       name: skill.name,
       start_date: skill.start_date,
